@@ -1,0 +1,16 @@
+server.port: 8082
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://10.116.64.14:13306/nhn_academy_3
+    username: nhn_academy_3
+    password: Jc1?tjnLZWi7LTIH
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+
+  application:
+    name: shoppingmall

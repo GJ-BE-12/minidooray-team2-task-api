@@ -2,12 +2,16 @@ package com.shoppingmall.shoppingmall.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
+@Setter
+@NoArgsConstructor
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,4 +30,9 @@ public class Task {
     @OneToMany(mappedBy = "task")
     private List<TaskTag> taskTags = new ArrayList<>();
 
+
+    public Task(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }

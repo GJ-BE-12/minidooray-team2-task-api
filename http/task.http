@@ -1,0 +1,9 @@
+
+### task create
+POST http://localhost:8082/api/projects/1/tasks
+Content-Type: application/json
+
+{
+  "title": "taskTitle2",
+  "content": "content2"
+}
