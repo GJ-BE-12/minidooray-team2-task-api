@@ -23,6 +23,9 @@ public class Task {
     @ManyToOne
     private MileStone mileStone;
 
+    @ManyToOne
+    private Project project;
+
     @OneToMany(mappedBy = "task")
     private List<TaskTag> taskTags = new ArrayList<>();
 

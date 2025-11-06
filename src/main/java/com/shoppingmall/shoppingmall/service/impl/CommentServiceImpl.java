@@ -17,12 +17,14 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public Comment create(long memberId, Task task, String content) {
-
         return commentRepository.save(new Comment(memberId, task, content));
     }
 
     @Override
-    public void deleteComment(long commentId) {
+    public void deleteComment(long memberId, long commentId) {
+        if(!(commentRepository.findById(commentId).get().getMemberId() == memberId)){
+            throw new IllegalStateException();
+        }
         commentRepository.deleteById(commentId);
     }
 }
