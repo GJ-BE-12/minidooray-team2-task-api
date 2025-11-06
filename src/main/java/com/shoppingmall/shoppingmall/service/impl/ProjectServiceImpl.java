@@ -1,7 +1,9 @@
 package com.shoppingmall.shoppingmall.service.impl;
 
 import com.shoppingmall.shoppingmall.entity.Project;
+import com.shoppingmall.shoppingmall.entity.ProjectMember;
 import com.shoppingmall.shoppingmall.entity.State;
+import com.shoppingmall.shoppingmall.entity.Tag;
 import com.shoppingmall.shoppingmall.repository.ProjectRepository;
 import com.shoppingmall.shoppingmall.service.ProjectService;
 import jakarta.transaction.Transactional;
@@ -18,33 +20,48 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Transactional
     @Override
-    public Project create(String name, Long memberId) {
-        if(projectRepository.existsByName(name)){
+    public Project create(String name, Long memberId, List<Tag> tags) {
+        if(projectRepository.existsByProjectName(name)){
             throw new IllegalStateException("Project(name = " + name + ") already exists.");
         }
-        return projectRepository.save(new Project(name, memberId));
-    }
+        Project project = new Project(name, memberId);
+        ProjectMember adminMember = new ProjectMember(memberId);
 
-    @Transactional
-    @Override
-    public Project getByName(String name) {
-        return projectRepository.getByName(name);
-    }
+        project.addProjectMember(adminMember);
 
-    @Transactional
-    @Override
-    public List<Project> getByState(State state) {
-        return projectRepository.getByState(state);
-    }
-
-    @Transactional
-    @Override
-    public void deleteByName(String name) {
-        if(!projectRepository.existsByName(name)){
-            throw new IllegalStateException("Project(name = " + name + ") no exists.");
+        if (tags != null && !tags.isEmpty()) {
+            project.setTags(tags);
         }
-        projectRepository.deleteByName(name);
+
+        return projectRepository.save(project);
     }
+
+    @Transactional
+    @Override
+    public List<Project> getProjectsByMemberId(Long memberId){
+        return projectRepository.findAllByMemberId(memberId);
+    }
+
+//    @Transactional
+//    @Override
+//    public Project getByName(String name) {
+//        return projectRepository.getByProjectName(name);
+//    }
+//
+//    @Transactional
+//    @Override
+//    public List<Project> getByState(State state) {
+//        return projectRepository.getByState(state);
+//    }
+//
+//    @Transactional
+//    @Override
+//    public void deleteByName(String name) {
+//        if(!projectRepository.existsByProjectName(name)){
+//            throw new IllegalStateException("Project(name = " + name + ") no exists.");
+//        }
+//        projectRepository.deleteByProjectName(name);
+//    }
 //
 //    @Transactional
 //    @Override

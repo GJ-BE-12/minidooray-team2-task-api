@@ -15,19 +15,34 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String name;
+    private String projectName;
 
     @Enumerated(EnumType.STRING)
     private State state;
 
     private Long adminId;
 
-    @OneToMany(mappedBy = "project")
-    private List<ProjectMember> projectMember = new ArrayList<>();
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<Tag> tags = new ArrayList<>();
 
-    public Project(String name, Long memberId){
-        this.name = name;
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<ProjectMember> projectMembers = new ArrayList<>();
+
+    public Project(String projectName, Long memberId) {
+        this.projectName = projectName;
         state = State.ACTIVATE;
         this.adminId = memberId;
+    }
+
+    public void addProjectMember(ProjectMember member) {
+        this.projectMembers.add(member);
+        member.setProject(this);
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+        for (Tag tag : tags) {
+            tag.setProject(this);
+        }
     }
 }

@@ -3,12 +3,16 @@ package com.shoppingmall.shoppingmall.repository;
 import com.shoppingmall.shoppingmall.entity.Project;
 import com.shoppingmall.shoppingmall.entity.State;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    boolean existsByName(String name);
-    Project getByName(String name);
-    List<Project> getByState(State state);
-    void deleteByName(String name);
+    boolean existsByProjectName(String name);
+//    Project getByProjectName(String projectName);
+//    List<Project> getByState(State state);
+//    void deleteByProjectName(String projectName);
+
+    @Query("select p from Project p join p.projectMembers pm where pm.memberId = :memberId")
+    List<Project> findAllByMemberId(Long memberId);
 }

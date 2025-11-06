@@ -1,9 +1,15 @@
 ### GET request to example server
-POST localhost:8082/projects
-Content-Type: text/plain
-memberId: 3
+POST localhost:8082/api/projects
+Content-Type: application/json
+memberId: 8
 
-taehun
-
+{
+  "projectName": "project16",
+  "tags": [
+    {"name": "tag1"},
+    {"name": "tag2"}
+  ]
+}
 
 ###
+GET localhost:8082/api/projects/by-member/8
