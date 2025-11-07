@@ -26,6 +26,9 @@ public class Project {
     private List<Tag> tags = new ArrayList<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<MileStone> mileStones = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<ProjectMember> projectMembers = new ArrayList<>();
 
     public Project(String projectName, Long memberId) {
