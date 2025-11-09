@@ -9,6 +9,6 @@ public interface TagService {
     Tag create(Long projectId, CreateTagRequest createTagRequest);
     List<Tag> getTags(Long projectId);
     void deleteTag(Long projectId, Long tagId);
-    Tag updateTag(Long projectId, Long tagId, Tag updatedTag);
+    void updateTag(Long projectId, Long tagId, CreateTagRequest updatedTag);
 
 }

@@ -20,7 +20,7 @@ public class MileStone {
 
     private String name;
 
-    @OneToMany(mappedBy = "mileStone")
+    @OneToMany(mappedBy = "mileStone", cascade = CascadeType.ALL)
     private List<Task> tasks = new ArrayList<>();
 
     @ManyToOne

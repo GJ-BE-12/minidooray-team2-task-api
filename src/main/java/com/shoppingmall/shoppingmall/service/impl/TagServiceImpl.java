@@ -13,6 +13,7 @@ import com.shoppingmall.shoppingmall.repository.TagRepository;
 import com.shoppingmall.shoppingmall.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -44,17 +45,17 @@ public class TagServiceImpl implements TagService {
         return tagRepository.findAllByProjectId(projectId);
     }
 
+    @Transactional
     @Override
-    public Tag updateTag(Long projectId, Long tagId, Tag updatedTag) {
+    public void updateTag(Long projectId, Long tagId, CreateTagRequest updatedTag) {
         Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new TagNotFoundException(tagId));
         tag.setName(updatedTag.getName());
-
-        return tagRepository.save(tag);
     }
 
+    @Transactional
     @Override
     public void deleteTag(Long projectId, Long tagId) {
-        Tag tag = tagRepository.findByIdAndProjectId(tagId, projectId);
+        Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new TagNotFoundException(tagId));
         tagRepository.delete(tag);
     }
 }

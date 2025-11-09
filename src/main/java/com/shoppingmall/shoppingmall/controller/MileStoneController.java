@@ -4,6 +4,7 @@ import com.shoppingmall.shoppingmall.dto.mileStone.CreateMileStoneRequest;
 import com.shoppingmall.shoppingmall.dto.mileStone.GetMileStoneResponse;
 import com.shoppingmall.shoppingmall.entity.MileStone;
 import com.shoppingmall.shoppingmall.service.MileStoneService;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/projects")
-@Setter
+@RequiredArgsConstructor
 public class MileStoneController {
 
-    private MileStoneService mileStoneService;
+    private final MileStoneService mileStoneService;
 
     // mileStone을 추가하는 컨트롤러
     @PostMapping("/{projectId}/milestones")

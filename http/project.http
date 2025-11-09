@@ -1,0 +1,20 @@
+### 프로젝트 생성
+POST localhost:8082/projects
+Content-Type: application/json
+memberId: 2
+
+{
+  "projectName": "project2",
+  "tagList": ["tag1", "tag2"],
+  "mileStoneList": ["mileStone1", "mileStone2"]
+}
+
+### 프로젝트 조회
+GET localhost:8082/projects/by-member/1
+
+### 프로젝트에 멤버 추가
+POST localhost:8082/projects/1/members
+Content-Type: application/json
+
+2
+

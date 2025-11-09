@@ -1,0 +1,21 @@
+### Tag 생성
+POST localhost:8082/projects/1/tags
+Content-Type: application/json
+
+{
+  "name": "tagName1"
+}
+
+### Tag리스트 조회
+GET localhost:8082/projects/1/tags
+
+### Tag 수정
+PUT localhost:8082/projects/1/tags/5
+Content-Type: application/json
+
+{
+  "name": "updatedTagName1"
+}
+
+### Tag 삭제
+DELETE localhost:8082/projects/1/tags/5

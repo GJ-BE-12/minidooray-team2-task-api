@@ -1,0 +1,21 @@
+### Comment 생성
+POST localhost:8082/projects/1/tasks/2/comments
+Content-Type: application/json
+memberId: 2
+
+{
+  "content": "testContent1"
+}
+
+### Comment 수정
+PUT localhost:8082/projects/1/tasks/2/comments/1
+Content-Type: application/json
+memberId: 2
+
+{
+  "content": "updatedContent1"
+}
+
+### Comment 삭제
+DELETE localhost:8082/projects/1/tasks/2/comments/1
+memberId: 2

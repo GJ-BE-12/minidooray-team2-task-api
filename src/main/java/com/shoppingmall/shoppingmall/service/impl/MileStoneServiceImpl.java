@@ -6,7 +6,6 @@ import com.shoppingmall.shoppingmall.entity.Project;
 import com.shoppingmall.shoppingmall.exception.already.MileStoneAlreadyExistException;
 import com.shoppingmall.shoppingmall.exception.notfound.MileStoneNotFoundException;
 import com.shoppingmall.shoppingmall.exception.notfound.NotFoundException;
-import com.shoppingmall.shoppingmall.exception.already.AlreadyExistException;
 import com.shoppingmall.shoppingmall.repository.MileStoneRepository;
 import com.shoppingmall.shoppingmall.repository.ProjectRepository;
 import com.shoppingmall.shoppingmall.service.MileStoneService;
@@ -41,7 +40,6 @@ public class MileStoneServiceImpl implements MileStoneService {
         return mileStoneRepository.save(mileStone);
     }
 
-    @Transactional
     @Override
     public List<MileStone> getMileStones(long projectId) {
         return mileStoneRepository.findByProjectId(projectId);

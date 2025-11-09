@@ -1,7 +1,6 @@
 package com.shoppingmall.shoppingmall.controller;
 
 import com.shoppingmall.shoppingmall.dto.comment.CommentRequest;
-import com.shoppingmall.shoppingmall.entity.Comment;
 import com.shoppingmall.shoppingmall.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

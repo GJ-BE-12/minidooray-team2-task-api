@@ -1,0 +1,8 @@
+### tag만 조회
+GET localhost:8082/projects/1/tasks/2/tags
+
+### 마일스토만 조회
+GET localhost:8082/projects/1/tasks/2/milestone
+
+### comment만 조회
+GET localhost:8082/projects/1/tasks/2/comments

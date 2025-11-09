@@ -7,9 +7,9 @@ import com.shoppingmall.shoppingmall.exception.notfound.TaskNotFoundException;
 import com.shoppingmall.shoppingmall.repository.CommentRepository;
 import com.shoppingmall.shoppingmall.repository.TaskRepository;
 import com.shoppingmall.shoppingmall.service.CommentService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +18,6 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final TaskRepository taskRepository;
 
-    @Transactional
     @Override
     public Comment create(long memberId, long taskId, String content) {
         Task task = taskRepository.findById(taskId)
@@ -27,6 +26,7 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.save(new Comment(memberId, task, content));
     }
 
+    @Transactional
     @Override
     public void update(long memberId, long taskId, long commentId, String content) {
         taskRepository.findById(taskId)
@@ -36,6 +36,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setContent(content);
     }
 
+    @Transactional
     @Override
     public void delete(long memberId, long taskId, long commentId) {
         if(!commentRepository.existsById(commentId)){
