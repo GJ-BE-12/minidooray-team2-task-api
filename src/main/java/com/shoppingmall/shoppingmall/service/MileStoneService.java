@@ -1,11 +1,12 @@
 package com.shoppingmall.shoppingmall.service;
 
+import com.shoppingmall.shoppingmall.dto.mileStone.CreateMileStoneRequest;
 import com.shoppingmall.shoppingmall.entity.MileStone;
 
 import java.util.List;
 
 public interface MileStoneService {
-    MileStone create(long projectId, long memberId, MileStone mileStone);
+    MileStone create(long projectId, long memberId, CreateMileStoneRequest createMileStoneRequest);
 
     List<MileStone> getMileStones(long projectId);
 

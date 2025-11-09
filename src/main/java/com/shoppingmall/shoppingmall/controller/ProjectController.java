@@ -1,11 +1,13 @@
 package com.shoppingmall.shoppingmall.controller;
 
-import com.shoppingmall.shoppingmall.dto.ProjectRequestDto;
+import com.shoppingmall.shoppingmall.dto.project.CreateProjectRequest;
+import com.shoppingmall.shoppingmall.dto.project.CreateProjectResponse;
+import com.shoppingmall.shoppingmall.dto.project.GetProjectResponse;
+import com.shoppingmall.shoppingmall.dto.task.TaskListResponse;
 import com.shoppingmall.shoppingmall.entity.Project;
 import com.shoppingmall.shoppingmall.entity.ProjectMember;
 import com.shoppingmall.shoppingmall.service.ProjectService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,25 +22,28 @@ public class ProjectController{
 
     // 프로젝트 이름과 멤버아이디(header로 들어옴, adminId에 memberId 삽입) 상태는 디폴트 값으로 ACTIVATE 부여
     @PostMapping
-    public Project create(@RequestHeader("memberId") Long memberId,
-                          @RequestBody ProjectRequestDto projectRequest) {
-        return projectService.create(projectRequest.getProjectName(), memberId, projectRequest.getTagList(), projectRequest.getMilestoneList());
+    public ResponseEntity<CreateProjectResponse> create(@RequestHeader("memberId") Long memberId,
+                                                        @RequestBody CreateProjectRequest createProjectRequest) {
+        Project project = projectService.create(createProjectRequest.getProjectName(), memberId, createProjectRequest.getTagList(), createProjectRequest.getMilestoneList());
+        return ResponseEntity.ok().body(CreateProjectResponse.from(project));
     }
 
     // memberId에 해당하는 member가 가지고 있는 Project List를 보여줌
     @GetMapping("/by-member/{memberId}")
-    public List<Project> getProjects(@PathVariable("memberId") Long memberId){
-        return projectService.getProjectsByMemberId(memberId);
+    public ResponseEntity<List<GetProjectResponse>> getProjects(@PathVariable("memberId") Long memberId){
+        List<GetProjectResponse> responses = projectService.getProjectsByMemberId(memberId)
+                .stream()
+                .map(GetProjectResponse::from)
+                .toList();
+        return ResponseEntity.ok().body(responses);
     }
 
     // uri로 들어온 ProjectId에 해당하는 프로젝트에 memberId를 저장함
     @PostMapping("/{id}/members")
     public ResponseEntity<ProjectMember> createProjectMember(@PathVariable("id") Long projectId,
                                                              @RequestBody Long memberId){
-        ProjectMember projectMember = projectService.addMemberToProject(projectId, memberId);
+        projectService.addMemberToProject(projectId, memberId);
 
-        return ResponseEntity.ok().body(projectMember);
+        return ResponseEntity.ok().build();
     }
-
-
 }

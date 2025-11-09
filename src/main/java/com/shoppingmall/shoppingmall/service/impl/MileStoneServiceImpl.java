@@ -1,5 +1,6 @@
 package com.shoppingmall.shoppingmall.service.impl;
 
+import com.shoppingmall.shoppingmall.dto.mileStone.CreateMileStoneRequest;
 import com.shoppingmall.shoppingmall.entity.MileStone;
 import com.shoppingmall.shoppingmall.entity.Project;
 import com.shoppingmall.shoppingmall.exception.NotFoundException;
@@ -22,16 +23,17 @@ public class MileStoneServiceImpl implements MileStoneService {
 
     // 마일스톤을 생성함
     @Override
-    public MileStone create(long projectId, long memberId, MileStone mileStone) {
+    public MileStone create(long projectId, long memberId, CreateMileStoneRequest createMileStoneRequest) {
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NotFoundException("Project not found with id: " + projectId));
 
         // 마일스톤의 이름이 존재할시 예외처리
-        if(mileStoneRepository.existsByProjectAndName(project, mileStone.getName())){
+        if(mileStoneRepository.existsByProjectAndName(project, createMileStoneRequest.getName())){
             throw new AlreadyExistException("이미 존재하는 마일스톤입니다.");
         }
 
+        MileStone mileStone = new MileStone(createMileStoneRequest.getName());
         mileStone.setProject(project);
 
         return mileStoneRepository.save(mileStone);

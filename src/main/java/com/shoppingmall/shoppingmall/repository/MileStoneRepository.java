@@ -9,5 +9,5 @@ import java.util.List;
 public interface MileStoneRepository extends JpaRepository<MileStone, Long> {
     List<MileStone> findByProjectId(Long projectId);
     boolean existsByProjectAndName(Project project, String name);
-    MileStone findByIdAndProjectId(Long milestoneId, Long projectId);
+    MileStone findByIdAndProjectId(Long mileStoneId, Long projectId);
 }

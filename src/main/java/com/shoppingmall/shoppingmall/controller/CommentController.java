@@ -1,5 +1,6 @@
 package com.shoppingmall.shoppingmall.controller;
 
+import com.shoppingmall.shoppingmall.dto.comment.CommentRequest;
 import com.shoppingmall.shoppingmall.entity.Comment;
 import com.shoppingmall.shoppingmall.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -12,12 +13,33 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
 
     private final CommentService commentService;
+
     @PostMapping("/{projectId}/tasks/{taskId}/comments")
-    public ResponseEntity<Comment> register(@PathVariable Long projectId,
+    public ResponseEntity<Long> register(@PathVariable Long projectId,
                                             @PathVariable Long taskId,
                                             @RequestHeader("memberId") Long memberId,
-                                            @RequestBody String content){
-        Comment comment = commentService.create(memberId, taskId, content);
-        return ResponseEntity.ok().body(comment);
+                                            @RequestBody CommentRequest createCommentRequest){
+        commentService.create(memberId, taskId, createCommentRequest.getContent());
+        return ResponseEntity.ok().body(taskId);
+    }
+
+    @PutMapping("/{projectId}/tasks/{taskId}/comments/{commentId}")
+    public ResponseEntity<Long> update(@PathVariable Long projectId,
+                                       @PathVariable Long taskId,
+                                       @PathVariable Long commentId,
+                                       @RequestHeader("memberId") Long memberId,
+                                       @RequestBody CommentRequest commentRequest
+                                       ){
+        commentService.update(memberId, taskId, commentId, commentRequest.getContent());
+        return ResponseEntity.ok().body(projectId);
+    }
+
+    @DeleteMapping("/{projectId}/tasks/{taskId}/comments/{commentId}")
+    public ResponseEntity<Void> delete(@PathVariable Long taskId,
+                                       @PathVariable Long commentId,
+                                       @RequestHeader("memberId") Long memberId,
+                                       @PathVariable String projectId){
+        commentService.delete(memberId, taskId, commentId);
+        return ResponseEntity.noContent().build();
     }
 }

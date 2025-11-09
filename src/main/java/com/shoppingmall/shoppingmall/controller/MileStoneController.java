@@ -1,9 +1,11 @@
 package com.shoppingmall.shoppingmall.controller;
 
+import com.shoppingmall.shoppingmall.dto.mileStone.CreateMileStoneRequest;
+import com.shoppingmall.shoppingmall.dto.mileStone.GetMileStoneResponse;
 import com.shoppingmall.shoppingmall.entity.MileStone;
-import com.shoppingmall.shoppingmall.repository.MileStoneRepository;
 import com.shoppingmall.shoppingmall.service.MileStoneService;
 import lombok.Setter;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,28 +19,36 @@ public class MileStoneController {
 
     // mileStone을 추가하는 컨트롤러
     @PostMapping("/{projectId}/milestones")
-    public MileStone create(@PathVariable long projectId,
-                            @RequestBody MileStone mileStone,
-                            @RequestHeader("memberId") Long memberId){
-        return mileStoneService.create(projectId, memberId, mileStone);
+    public ResponseEntity<Long> create(@PathVariable long projectId,
+                                                          @RequestBody CreateMileStoneRequest createMileStoneRequest,
+                                                          @RequestHeader("memberId") Long memberId){
+        mileStoneService.create(projectId, memberId, createMileStoneRequest);
+        return ResponseEntity.ok().body(projectId);
     }
 
     // 해당 프로젝트의 mileStone 목록을 보여주는 컨트롤러
     @GetMapping("/{projectId}/milestones")
-    public List<MileStone> getMileStones(@PathVariable long projectId){
-        return mileStoneService.getMileStones(projectId);
+    public ResponseEntity<List<GetMileStoneResponse>> getMileStones(@PathVariable long projectId){
+        List<GetMileStoneResponse> responses = mileStoneService.getMileStones(projectId)
+                .stream()
+                .map(GetMileStoneResponse::from)
+                .toList();
+
+        return ResponseEntity.ok().body(responses);
     }
 
     @PutMapping("/{projectId}/milestones/{milestoneId}")
-    public MileStone update(@PathVariable long projectId,
+    public ResponseEntity<Long> update(@PathVariable long projectId,
                             @PathVariable long milestoneId,
                             @RequestBody MileStone updatedMileStone) {
-        return mileStoneService.update(projectId, milestoneId, updatedMileStone);
+        mileStoneService.update(projectId, milestoneId, updatedMileStone);
+        return ResponseEntity.ok().body(projectId);
     }
 
     @DeleteMapping("/{projectId}/milestones/{milestoneId}")
-    public void delete(@PathVariable long projectId,
+    public ResponseEntity<Void> delete(@PathVariable long projectId,
                        @PathVariable long milestoneId) {
         mileStoneService.delete(projectId, milestoneId);
+        return ResponseEntity.noContent().build();
     }
 }

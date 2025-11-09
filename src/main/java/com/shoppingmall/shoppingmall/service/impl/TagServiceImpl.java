@@ -1,6 +1,6 @@
 package com.shoppingmall.shoppingmall.service.impl;
 
-import com.shoppingmall.shoppingmall.dto.CreateTagRequest;
+import com.shoppingmall.shoppingmall.dto.tag.CreateTagRequest;
 import com.shoppingmall.shoppingmall.entity.Project;
 import com.shoppingmall.shoppingmall.entity.Tag;
 import com.shoppingmall.shoppingmall.exception.AlreadyExistException;
@@ -39,12 +39,11 @@ public class TagServiceImpl implements TagService {
     public List<Tag> getTags(Long projectId) {
         projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(projectId));
-
         return tagRepository.findAllByProjectId(projectId);
     }
 
     @Override
-    public Tag update(Long projectId, Long tagId, Tag updatedTag) {
+    public Tag updateTag(Long projectId, Long tagId, Tag updatedTag) {
         Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new NotFoundException("해당하는 Tag가 없습니다 : " + tagId));
         tag.setName(updatedTag.getName());
 

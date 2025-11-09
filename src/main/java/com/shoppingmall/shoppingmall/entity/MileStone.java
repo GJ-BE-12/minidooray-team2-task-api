@@ -27,4 +27,8 @@ public class MileStone {
     @JsonIgnore
     private Project project;
 
+    public MileStone(String name){
+        this.name = name;
+    }
+
 }

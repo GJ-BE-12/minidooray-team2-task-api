@@ -67,6 +67,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 
         // 여기서 영속성 전이 발생
+
         return projectRepository.save(project);
     }
 
@@ -91,6 +92,8 @@ public class ProjectServiceImpl implements ProjectService {
         if(projectMemberRepository.existsByProjectIdAndMemberId(projectId, memberId)){
             throw new AlreadyExistException("Member ID already exists in the project");
         }
+
+
 
         ProjectMember newMember = new ProjectMember(memberId);
         project.addProjectMember(newMember);

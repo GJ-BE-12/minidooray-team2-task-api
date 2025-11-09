@@ -1,5 +1,6 @@
 package com.shoppingmall.shoppingmall.repository;
 
+import com.shoppingmall.shoppingmall.entity.MileStone;
 import com.shoppingmall.shoppingmall.entity.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -10,6 +11,4 @@ import java.util.Optional;
 public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findAllByProject_Id(long projectId);
     Optional<Task> findByIdAndProject_Id(Long taskId, Long projectId);
-
-
 }

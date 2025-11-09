@@ -1,7 +1,7 @@
 package com.shoppingmall.shoppingmall.controller;
 
-import com.shoppingmall.shoppingmall.dto.CreateTagRequest;
-import com.shoppingmall.shoppingmall.dto.TagResponse;
+import com.shoppingmall.shoppingmall.dto.tag.CreateTagRequest;
+import com.shoppingmall.shoppingmall.dto.tag.GetTagResponse;
 import com.shoppingmall.shoppingmall.entity.Tag;
 import com.shoppingmall.shoppingmall.service.TagService;
 import jakarta.validation.Valid;
@@ -25,19 +25,21 @@ public class TagController {
     }
 
     @GetMapping("/{projectId}/tags")
-    public ResponseEntity<List<TagResponse>> getTags(@PathVariable("projectId") Long projectId) {
-        List<TagResponse> responses = tagService.getTags(projectId)
+    public ResponseEntity<List<GetTagResponse>> getTags(@PathVariable("projectId") Long projectId) {
+        List<GetTagResponse> responses = tagService.getTags(projectId)
                 .stream()
-                .map(TagResponse::from)
+                .map(GetTagResponse::from)
                 .toList();
         return ResponseEntity.ok(responses);
     }
 
     @PutMapping("/{projectId}/tags/{tagId}")
-    public Tag update(@PathVariable long projectId,
-                      @PathVariable long tagId,
-                      @RequestBody Tag updatedTag) {
-        return tagService.update(projectId, tagId, updatedTag);
+    public ResponseEntity<Long> update(@PathVariable long projectId,
+                           @PathVariable long tagId,
+                           @RequestBody Tag updatedTag) {
+        tagService.updateTag(projectId, tagId, updatedTag);
+
+        return ResponseEntity.ok().body(projectId);
     }
 
     @DeleteMapping("/{projectId}/tags/{tagId}")

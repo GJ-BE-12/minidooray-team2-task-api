@@ -1,4 +1,4 @@
-package com.shoppingmall.shoppingmall.dto;
+package com.shoppingmall.shoppingmall.dto.tag;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
