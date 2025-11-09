@@ -39,6 +39,8 @@ public class TagServiceImpl implements TagService {
     public List<Tag> getTags(Long projectId) {
         projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(projectId));
+
+        return tagRepository.findAllByProjectId(projectId);
     }
 
     @Override
@@ -47,7 +49,6 @@ public class TagServiceImpl implements TagService {
         tag.setName(updatedTag.getName());
 
         return tagRepository.save(tag);
-        return tagRepository.findAllByProjectId(projectId);
     }
 
     @Override
