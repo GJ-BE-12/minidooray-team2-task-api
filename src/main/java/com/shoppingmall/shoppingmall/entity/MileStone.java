@@ -1,5 +1,6 @@
 package com.shoppingmall.shoppingmall.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class MileStone {
     private List<Task> tasks = new ArrayList<>();
 
     @ManyToOne
+    @JsonIgnore
     private Project project;
 
 }

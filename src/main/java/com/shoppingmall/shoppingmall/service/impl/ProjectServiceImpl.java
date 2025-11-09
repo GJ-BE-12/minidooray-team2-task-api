@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -22,11 +23,10 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository projectMemberRepository;
 
-
     // memberId 해당하는 member가 프로젝트 생성
     @Transactional
     @Override
-    public Project create(String name, Long memberId, List<Tag> tags, List<MileStone> mileStones) {
+    public Project create(String name, Long memberId, List<String> tagNames, List<String> mileStoneNames) {
 
         // 이미 존재하는 Project 이름 예외 처리
         if(projectRepository.existsByProjectName(name)){
@@ -42,13 +42,29 @@ public class ProjectServiceImpl implements ProjectService {
         // Project 객체의 projectMembers 리스트에 adminMember 객체를 추가
         project.addProjectMember(adminMember);
 
-        if (tags != null && !tags.isEmpty()) {
-            project.setTags(tags);
+
+        if (tagNames != null && !tagNames.isEmpty()) {
+            List<Tag> tagList = new ArrayList<>();
+            for(String tagName : tagNames){
+                Tag tag = new Tag();
+                tag.setName(tagName);
+                tag.setProject(project);
+                tagList.add(tag);
+            }
+            project.setTags(tagList);
         }
 
-        if(mileStones != null && !mileStones.isEmpty()){
-            project.setMileStones(mileStones);
+        if(mileStoneNames != null && !mileStoneNames.isEmpty()){
+            List<MileStone> mileStoneList = new ArrayList<>();
+            for(String mileStoneName : mileStoneNames){
+                MileStone mileStone = new MileStone();
+                mileStone.setName(mileStoneName);
+                mileStone.setProject(project);
+                mileStoneList.add(mileStone);
+            }
+            project.setMileStones(mileStoneList);
         }
+
 
         // 여기서 영속성 전이 발생
         return projectRepository.save(project);

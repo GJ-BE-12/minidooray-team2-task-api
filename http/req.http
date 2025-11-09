@@ -1,18 +1,12 @@
 ### 프로젝트 생성
 POST localhost:8082/api/projects
 Content-Type: application/json
-memberId: 14
+memberId: 2
 
 {
-  "projectName": "project19",
-  "tags": [
-    {"name": "tag1"},
-    {"name": "tag2"}
-  ],
-  "mileStones": [
-    {"name": "mileStone1"},
-    {"name": "mileStone2"}
-  ]
+  "projectName": "project2",
+  "tagList": ["tag1", "tag2"],
+  "mileStones": ["mileStone1", "mileStone2"]
 }
 
 ###

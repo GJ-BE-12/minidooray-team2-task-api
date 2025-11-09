@@ -1,5 +1,6 @@
 package com.shoppingmall.shoppingmall.controller;
 
+import com.shoppingmall.shoppingmall.dto.ProjectRequestDto;
 import com.shoppingmall.shoppingmall.entity.Project;
 import com.shoppingmall.shoppingmall.entity.ProjectMember;
 import com.shoppingmall.shoppingmall.service.ProjectService;
@@ -20,8 +21,8 @@ public class ProjectController{
     // 프로젝트 이름과 멤버아이디(header로 들어옴, adminId에 memberId 삽입) 상태는 디폴트 값으로 ACTIVATE 부여
     @PostMapping
     public Project create(@RequestHeader("memberId") Long memberId,
-                          @RequestBody Project project) {
-        return projectService.create(project.getProjectName(), memberId, project.getTags(), project.getMileStones());
+                          @RequestBody ProjectRequestDto projectRequest) {
+        return projectService.create(projectRequest.getProjectName(), memberId, projectRequest.getTagList(), projectRequest.getMilestoneList());
     }
 
     // memberId에 해당하는 member가 가지고 있는 Project List를 보여줌

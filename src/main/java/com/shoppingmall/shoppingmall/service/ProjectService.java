@@ -5,7 +5,7 @@ import com.shoppingmall.shoppingmall.entity.*;
 import java.util.List;
 
 public interface ProjectService {
-    Project create(String name, Long memberId, List<Tag> tags, List<MileStone> mileStones);
+    Project create(String name, Long memberId, List<String> tagNames, List<String> mileStoneNames);
     List<Project> getProjectsByMemberId(Long memberId);
     ProjectMember addMemberToProject(Long projectId, Long memberId);
 //    Project getByName(String name);
