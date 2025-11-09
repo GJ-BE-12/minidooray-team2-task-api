@@ -4,8 +4,10 @@ import com.shoppingmall.shoppingmall.entity.MileStone;
 import com.shoppingmall.shoppingmall.entity.Project;
 import com.shoppingmall.shoppingmall.entity.ProjectMember;
 import com.shoppingmall.shoppingmall.entity.Tag;
-import com.shoppingmall.shoppingmall.exception.AlreadyExistException;
-import com.shoppingmall.shoppingmall.exception.NotFoundException;
+import com.shoppingmall.shoppingmall.exception.already.AlreadyExistException;
+import com.shoppingmall.shoppingmall.exception.already.ProjectAlreadyExistException;
+import com.shoppingmall.shoppingmall.exception.notfound.NotFoundException;
+import com.shoppingmall.shoppingmall.exception.notfound.ProjectNotFoundException;
 import com.shoppingmall.shoppingmall.repository.ProjectMemberRepository;
 import com.shoppingmall.shoppingmall.repository.ProjectRepository;
 import com.shoppingmall.shoppingmall.service.ProjectService;
@@ -30,7 +32,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         // 이미 존재하는 Project 이름 예외 처리
         if(projectRepository.existsByProjectName(name)){
-            throw new AlreadyExistException("Project(name = " + name + ") already exists.");
+            throw new ProjectAlreadyExistException(name);
         }
 
         // 프로젝트 객체 생성 state는 default, adminId는 memberId (비영속)
@@ -85,7 +87,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         // 멤버에 맞는 프로젝트가 없을시 예외
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new NotFoundException("Project not found id: " + projectId));
+                .orElseThrow(() -> new ProjectNotFoundException(projectId));
 
 
 

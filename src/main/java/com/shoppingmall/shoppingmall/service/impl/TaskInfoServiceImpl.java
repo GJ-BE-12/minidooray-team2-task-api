@@ -4,7 +4,7 @@ import com.shoppingmall.shoppingmall.entity.Comment;
 import com.shoppingmall.shoppingmall.entity.MileStone;
 import com.shoppingmall.shoppingmall.entity.Task;
 import com.shoppingmall.shoppingmall.entity.TaskTag;
-import com.shoppingmall.shoppingmall.exception.TaskNotFoundException;
+import com.shoppingmall.shoppingmall.exception.notfound.TaskNotFoundException;
 import com.shoppingmall.shoppingmall.repository.CommentRepository;
 import com.shoppingmall.shoppingmall.repository.TaskRepository;
 import com.shoppingmall.shoppingmall.repository.TaskTagRepository;

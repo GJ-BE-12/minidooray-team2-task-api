@@ -1,4 +1,4 @@
-package com.shoppingmall.shoppingmall.exception;
+package com.shoppingmall.shoppingmall.exception.already;
 
 public class TaskAlreadyExistException extends AlreadyExistException {
     public TaskAlreadyExistException(Long id) {

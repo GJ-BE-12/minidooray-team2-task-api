@@ -1,4 +1,4 @@
-package com.shoppingmall.shoppingmall.exception;
+package com.shoppingmall.shoppingmall.exception.notfound;
 
 public class CommentNotfoundException extends NotFoundException {
     public CommentNotfoundException(Long id) {

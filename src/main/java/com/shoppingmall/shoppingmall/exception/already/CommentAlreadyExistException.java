@@ -1,4 +1,4 @@
-package com.shoppingmall.shoppingmall.exception;
+package com.shoppingmall.shoppingmall.exception.already;
 
 public class CommentAlreadyExistException extends AlreadyExistException {
     public CommentAlreadyExistException(Long id) {

@@ -2,8 +2,9 @@ package com.shoppingmall.shoppingmall.service.impl;
 
 import com.shoppingmall.shoppingmall.dto.task.CreateTaskRequest;
 import com.shoppingmall.shoppingmall.entity.*;
-import com.shoppingmall.shoppingmall.exception.ProjectNotFoundException;
-import com.shoppingmall.shoppingmall.exception.TaskNotFoundException;
+import com.shoppingmall.shoppingmall.exception.notfound.MileStoneNotFoundException;
+import com.shoppingmall.shoppingmall.exception.notfound.ProjectNotFoundException;
+import com.shoppingmall.shoppingmall.exception.notfound.TaskNotFoundException;
 import com.shoppingmall.shoppingmall.repository.*;
 import com.shoppingmall.shoppingmall.service.TaskService;
 
@@ -36,7 +37,7 @@ public class TaskServiceImpl implements TaskService {
         // 3. 마일스톤 설정
         MileStone mileStone = mileStoneRepository.findByIdAndProjectId(request.getMilestoneId(), projectId);
         if(mileStone == null){
-            throw new IllegalArgumentException("ProjectId : " + projectId + "에 마일스톤: " + request.getMilestoneId() + "이 존재하지 않습니다.");
+            throw new MileStoneNotFoundException(request.getMilestoneId());
         }
         task.setMileStone(mileStone);
 

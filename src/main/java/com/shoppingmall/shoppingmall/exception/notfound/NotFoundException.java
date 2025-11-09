@@ -1,4 +1,4 @@
-package com.shoppingmall.shoppingmall.exception;
+package com.shoppingmall.shoppingmall.exception.notfound;
 
 public class NotFoundException extends RuntimeException {
     public NotFoundException(String message) {

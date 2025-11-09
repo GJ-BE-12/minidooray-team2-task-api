@@ -3,9 +3,11 @@ package com.shoppingmall.shoppingmall.service.impl;
 import com.shoppingmall.shoppingmall.dto.tag.CreateTagRequest;
 import com.shoppingmall.shoppingmall.entity.Project;
 import com.shoppingmall.shoppingmall.entity.Tag;
-import com.shoppingmall.shoppingmall.exception.AlreadyExistException;
-import com.shoppingmall.shoppingmall.exception.NotFoundException;
-import com.shoppingmall.shoppingmall.exception.ProjectNotFoundException;
+import com.shoppingmall.shoppingmall.exception.already.AlreadyExistException;
+import com.shoppingmall.shoppingmall.exception.already.TagAlreadyExistException;
+import com.shoppingmall.shoppingmall.exception.notfound.NotFoundException;
+import com.shoppingmall.shoppingmall.exception.notfound.ProjectNotFoundException;
+import com.shoppingmall.shoppingmall.exception.notfound.TagNotFoundException;
 import com.shoppingmall.shoppingmall.repository.ProjectRepository;
 import com.shoppingmall.shoppingmall.repository.TagRepository;
 import com.shoppingmall.shoppingmall.service.TagService;
@@ -26,7 +28,7 @@ public class TagServiceImpl implements TagService {
                 .orElseThrow(() -> new ProjectNotFoundException(projectId));
 
         if(tagRepository.existsByName(createTagRequest.getName())){
-            throw new AlreadyExistException("이미 존재하는 태그입니다.: " + createTagRequest.getName());
+            throw new TagAlreadyExistException(createTagRequest.getName());
         }
 
         Tag tag = new Tag(createTagRequest.getName());
@@ -44,7 +46,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Tag updateTag(Long projectId, Long tagId, Tag updatedTag) {
-        Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new NotFoundException("해당하는 Tag가 없습니다 : " + tagId));
+        Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new TagNotFoundException(tagId));
         tag.setName(updatedTag.getName());
 
         return tagRepository.save(tag);

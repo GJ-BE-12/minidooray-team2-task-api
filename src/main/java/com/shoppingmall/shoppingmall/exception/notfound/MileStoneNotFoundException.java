@@ -1,4 +1,4 @@
-package com.shoppingmall.shoppingmall.exception;
+package com.shoppingmall.shoppingmall.exception.notfound;
 
 public class MileStoneNotFoundException extends NotFoundException {
     public MileStoneNotFoundException(Long id) {
