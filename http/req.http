@@ -1,15 +1,18 @@
-### GET request to example server
+### 프로젝트 생성
 POST localhost:8082/api/projects
 Content-Type: application/json
-memberId: 8
+memberId: 14
 
 {
-  "projectName": "project16",
+  "projectName": "project19",
   "tags": [
     {"name": "tag1"},
     {"name": "tag2"}
+  ],
+  "mileStones": [
+    {"name": "mileStone1"},
+    {"name": "mileStone2"}
   ]
 }
 
 ###
-GET localhost:8082/api/projects/by-member/8

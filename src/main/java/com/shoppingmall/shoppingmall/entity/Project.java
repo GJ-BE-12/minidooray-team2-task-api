@@ -37,8 +37,10 @@ public class Project {
         this.adminId = memberId;
     }
 
+    // 프로젝트에 멤버 추가 or 프로젝트 생성시 첫번째 멤버로 추가
     public void addProjectMember(ProjectMember member) {
         this.projectMembers.add(member);
+        // adminMember 객체의 project 필드에 project 객체 추가
         member.setProject(this);
     }
 
@@ -46,6 +48,13 @@ public class Project {
         this.tags = tags;
         for (Tag tag : tags) {
             tag.setProject(this);
+        }
+    }
+
+    public void setMileStones(List<MileStone> mileStones){
+        this.mileStones = mileStones;
+        for(MileStone mileStone : mileStones){
+            mileStone.setProject(this);
         }
     }
 }

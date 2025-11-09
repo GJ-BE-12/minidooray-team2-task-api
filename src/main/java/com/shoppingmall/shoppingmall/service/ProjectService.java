@@ -1,14 +1,13 @@
 package com.shoppingmall.shoppingmall.service;
 
-import com.shoppingmall.shoppingmall.entity.Project;
-import com.shoppingmall.shoppingmall.entity.State;
-import com.shoppingmall.shoppingmall.entity.Tag;
+import com.shoppingmall.shoppingmall.entity.*;
 
 import java.util.List;
 
 public interface ProjectService {
-    Project create(String name, Long memberId, List<Tag> tags);
+    Project create(String name, Long memberId, List<Tag> tags, List<MileStone> mileStones);
     List<Project> getProjectsByMemberId(Long memberId);
+    ProjectMember addMemberToProject(Long projectId, Long memberId);
 //    Project getByName(String name);
 //    List<Project> getByState(State state);
 //    void deleteByName(String name);
