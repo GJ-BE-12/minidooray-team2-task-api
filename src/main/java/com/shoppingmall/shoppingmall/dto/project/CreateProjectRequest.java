@@ -12,5 +12,5 @@ import java.util.List;
 public class CreateProjectRequest {
     private String projectName;
     private List<String> tagList;
-    private List<String> milestoneList;
+    private List<String> mileStoneList;
 }

@@ -9,9 +9,9 @@ import com.shoppingmall.shoppingmall.exception.NotFoundException;
 import com.shoppingmall.shoppingmall.repository.ProjectMemberRepository;
 import com.shoppingmall.shoppingmall.repository.ProjectRepository;
 import com.shoppingmall.shoppingmall.service.ProjectService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +79,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     // 프로젝트에 멤버 등록
+    @Transactional
     @Override
     public ProjectMember addMemberToProject(Long projectId, Long memberId) {
 

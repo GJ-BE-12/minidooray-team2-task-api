@@ -25,6 +25,7 @@ public class MileStone {
 
     @ManyToOne
     @JsonIgnore
+    @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
     public MileStone(String name){

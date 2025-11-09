@@ -47,11 +47,9 @@ public class MileStoneServiceImpl implements MileStoneService {
 
     @Transactional
     @Override
-    public MileStone update(long projectId, long milestoneId, MileStone updatedMileStone) {
+    public void update(long projectId, long milestoneId, MileStone updatedMileStone) {
         MileStone mileStone = mileStoneRepository.findById(milestoneId).orElseThrow(() -> new NotFoundException("해당하는 mileStone이 없습니다 : " + milestoneId));
         mileStone.setName(updatedMileStone.getName());
-
-        return mileStoneRepository.save(mileStone);
     }
 
     @Transactional

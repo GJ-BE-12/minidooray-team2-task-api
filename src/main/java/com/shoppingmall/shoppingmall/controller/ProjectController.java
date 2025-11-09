@@ -24,7 +24,7 @@ public class ProjectController{
     @PostMapping
     public ResponseEntity<CreateProjectResponse> create(@RequestHeader("memberId") Long memberId,
                                                         @RequestBody CreateProjectRequest createProjectRequest) {
-        Project project = projectService.create(createProjectRequest.getProjectName(), memberId, createProjectRequest.getTagList(), createProjectRequest.getMilestoneList());
+        Project project = projectService.create(createProjectRequest.getProjectName(), memberId, createProjectRequest.getTagList(), createProjectRequest.getMileStoneList());
         return ResponseEntity.ok().body(CreateProjectResponse.from(project));
     }
 
