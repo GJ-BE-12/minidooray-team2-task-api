@@ -10,7 +10,7 @@ memberId: 1
 }
 
 ### 프로젝트 조회
-GET localhost:8082/api/projects/by-member/3
+GET localhost:8082/api/projects/by-member/1
 
 ###
 POST localhost:8082/api/projects/1/members

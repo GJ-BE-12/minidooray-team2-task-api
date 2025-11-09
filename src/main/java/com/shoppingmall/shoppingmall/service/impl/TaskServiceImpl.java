@@ -1,7 +1,9 @@
 package com.shoppingmall.shoppingmall.service.impl;
 
 import com.shoppingmall.shoppingmall.dto.task.CreateTaskRequest;
+import com.shoppingmall.shoppingmall.dto.task.UpdateTaskRequest;
 import com.shoppingmall.shoppingmall.entity.*;
+import com.shoppingmall.shoppingmall.exception.InvalidRequestException;
 import com.shoppingmall.shoppingmall.exception.notfound.MileStoneNotFoundException;
 import com.shoppingmall.shoppingmall.exception.notfound.ProjectNotFoundException;
 import com.shoppingmall.shoppingmall.exception.notfound.TaskNotFoundException;
@@ -35,16 +37,29 @@ public class TaskServiceImpl implements TaskService {
         task.setProject(project);
 
         // 3. 마일스톤 설정
-        MileStone mileStone = mileStoneRepository.findByIdAndProjectId(request.getMilestoneId(), projectId);
-        if(mileStone == null){
-            throw new MileStoneNotFoundException(request.getMilestoneId());
+        // 마일스톤 설정
+        if (request.getMilestoneId() != null) {
+            MileStone mileStone = mileStoneRepository.findByIdAndProjectId(request.getMilestoneId(), projectId);
+            if (mileStone == null) {
+                throw new MileStoneNotFoundException(request.getMilestoneId());
+            }
+            task.setMileStone(mileStone);
         }
-        task.setMileStone(mileStone);
+
+        // 태그 설정
+        if (request.getTagIds() != null && !request.getTagIds().isEmpty()) {
+            List<Tag> tags = tagRepository.findAllByIdInAndProjectId(request.getTagIds(), projectId);
+            if (tags.size() != request.getTagIds().size()) {
+                throw new InvalidRequestException("ProjectId: " + projectId + "에 존재하지 않는 태그가 포함되어 있습니다.");
+            }
+            tags.forEach(task::addTaskTag);
+        }
+
 
         // 4. 태그 설정
         List<Tag> tags = tagRepository.findAllByIdInAndProjectId(request.getTagIds(), projectId);
         if(tags.size() != request.getTagIds().size()){
-            throw new IllegalArgumentException("ProjectId: " + projectId + "에 존재하지 않는 태그가 포함되어 있습니다.");
+            throw new InvalidRequestException("ProjectId: " + projectId + "에 존재하지 않는 태그가 포함되어 있습니다.");
         }
         tags.forEach(task::addTaskTag);
 
@@ -65,6 +80,9 @@ public class TaskServiceImpl implements TaskService {
     @Transactional(readOnly = true)
     @Override
     public Task getTask(Long projectId, Long taskId) {
+        projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId));
+
         return taskRepository.findByIdAndProject_Id(taskId, projectId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
     }
@@ -73,11 +91,57 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     @Override
     public void deleteTask(Long projectId, Long taskId) {
+        projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId));
+
         Task task = getTask(projectId, taskId);
         taskRepository.delete(task); // CascadeType.ALL -> TaskTag도 자동 삭제
     }
 
     //update
+    @Transactional
+    @Override
+    public void updateTask(Long projectId, Long taskId, UpdateTaskRequest request){
+        projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId));
 
+        // 기존 task 조회
+       Task task = getTask(projectId, taskId);
 
+       // 수정
+       if(request.getTitle() != null){
+           if (request.getTitle().isBlank()) {
+               throw new InvalidRequestException("제목은 공백일 수 없습니다.");
+           }
+           task.setTitle(request.getTitle());
+       }
+
+       if (request.getContent() != null) {
+           if (request.getContent().isBlank()) {
+               throw new InvalidRequestException("내용은 공백일 수 없습니다.");
+           }
+           task.setContent(request.getContent());
+       }
+
+       if(request.getMilestoneId() != null){
+           MileStone mileStone = mileStoneRepository.findByIdAndProjectId(request.getMilestoneId(),projectId);
+           if(mileStone == null) {
+               throw new MileStoneNotFoundException(request.getMilestoneId());
+           }
+           task.setMileStone(mileStone);
+       }
+
+       if (request.getTagIds() != null) {
+           task.getTaskTags().clear();
+           if (!request.getTagIds().isEmpty()) {
+                List<Tag> tags = tagRepository.findAllByIdInAndProjectId(request.getTagIds(), projectId);
+                if(tags.size() != request.getTagIds().size()){
+                    throw new InvalidRequestException(
+                            "ProjectId: " + projectId + "에 존재하지 않는 태그가 포함되어 있습니다."
+                    );
+                }
+               tags.forEach(task::addTaskTag);
+            }
+        }
+    }
 }

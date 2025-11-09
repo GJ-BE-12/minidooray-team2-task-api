@@ -4,10 +4,10 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "title": "taskTitle8",
-  "content": "content8",
-  "milestoneId": 3,
-  "tagIds": [3,4]
+  "title": "title2",
+  "content": "content2",
+  "milestoneId": 4,
+  "tagIds": [4]
 }
 
 ### 전체 task 조회
@@ -15,25 +15,19 @@ GET http://localhost:8082/api/projects/1/tasks
 Accept: application/json
 
 ### 단일 task 조회
-GET http://localhost:8082/api/projects/1/tasks/6
+GET http://localhost:8082/api/projects/1/tasks/1
 Accept: application/json
 
 ### task 삭제
 DELETE http://localhost:8082/api/projects/1/tasks/1
 
-
-### tag 등록
-POST http://localhost:8082/api/projects/1/tag
+### task 수정
+PUT http://localhost:8082/api/projects/2/tasks/2
 Content-Type: application/json
-Accept: application/json
 
 {
-  "name": "tag4"
+  "title": "title_update",
+  "content": "content_update",
+  "milestoneId": null,
+  "tagIds": null
 }
-
-### tag 리스트 조회
-GET http://localhost:8082/api/projects/1/tags
-Accept: application/json
-
-### tag 삭제
-DELETE http://localhost:8082/api/projects/1/tags/2

@@ -3,6 +3,7 @@ package com.shoppingmall.shoppingmall.controller;
 import com.shoppingmall.shoppingmall.dto.task.CreateTaskRequest;
 import com.shoppingmall.shoppingmall.dto.task.TaskListResponse;
 import com.shoppingmall.shoppingmall.dto.task.TaskResponse;
+import com.shoppingmall.shoppingmall.dto.task.UpdateTaskRequest;
 import com.shoppingmall.shoppingmall.entity.Task;
 import com.shoppingmall.shoppingmall.service.TaskService;
 import jakarta.validation.Valid;
@@ -41,6 +42,14 @@ public class TaskController {
                                                 @PathVariable("taskId") Long taskId) {
         Task task = taskService.getTask(projectId,taskId);
         return ResponseEntity.ok().body(TaskResponse.from(task));
+    }
+
+    @PutMapping("/{id}/tasks/{taskId}")
+    public ResponseEntity<Long> updateTask(@PathVariable("id") Long projectId,
+                                           @PathVariable("taskId") Long taskId,
+                                           @Valid @RequestBody UpdateTaskRequest updateTaskRequest){
+        taskService.updateTask(projectId, taskId, updateTaskRequest);
+        return ResponseEntity.ok().body(taskId);
     }
 
     @DeleteMapping("/{id}/tasks/{taskId}")
