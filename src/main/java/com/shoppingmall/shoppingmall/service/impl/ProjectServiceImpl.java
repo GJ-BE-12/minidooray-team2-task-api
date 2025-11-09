@@ -85,6 +85,8 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NotFoundException("Project not found id: " + projectId));
 
+
+
         // 해당 프로젝트에 멤버가 이미 존재할시 예외
         if(projectMemberRepository.existsByProjectIdAndMemberId(projectId, memberId)){
             throw new AlreadyExistException("Member ID already exists in the project");
