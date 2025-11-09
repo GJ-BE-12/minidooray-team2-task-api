@@ -1,7 +1,9 @@
 package com.shoppingmall.shoppingmall.service.impl;
 
-import com.shoppingmall.shoppingmall.dto.CreateTaskRequest;
+import com.shoppingmall.shoppingmall.dto.task.CreateTaskRequest;
 import com.shoppingmall.shoppingmall.entity.*;
+import com.shoppingmall.shoppingmall.exception.ProjectNotFoundException;
+import com.shoppingmall.shoppingmall.exception.TaskNotFoundException;
 import com.shoppingmall.shoppingmall.repository.*;
 import com.shoppingmall.shoppingmall.service.TaskService;
 
@@ -11,26 +13,39 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import org.springframework.transaction.annotation.Transactional;
-
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
     private final MileStoneRepository mileStoneRepository;
     private final TagRepository tagRepository;
-    private final TaskTagRepository taskTagRepository;
 
     @Transactional
     @Override
     public Task create(Long projectId, CreateTaskRequest request) {
-        Project project = getProject(projectId);
-        Task task = createTaskEntity(request, project);
+        // 1. 프로젝트 유효성 검사
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId));
 
-        setMilestoneIfExists(task, request.getMilestoneId());
-        setTagsIfExists(task, request.getTagIds());
+        // 2. Task 생성 + project set
+        Task task = new Task(request.getTitle(), request.getContent());
+        task.setProject(project);
+
+        // 3. 마일스톤 설정
+        MileStone mileStone = mileStoneRepository.findByIdAndProjectId(request.getMilestoneId(), projectId);
+        if(mileStone == null){
+            throw new IllegalArgumentException("ProjectId : " + projectId + "에 마일스톤: " + request.getMilestoneId() + "이 존재하지 않습니다.");
+        }
+        task.setMileStone(mileStone);
+
+        // 4. 태그 설정
+        List<Tag> tags = tagRepository.findAllByIdInAndProjectId(request.getTagIds(), projectId);
+        if(tags.size() != request.getTagIds().size()){
+            throw new IllegalArgumentException("ProjectId: " + projectId + "에 존재하지 않는 태그가 포함되어 있습니다.");
+        }
+        tags.forEach(task::addTaskTag);
 
         return taskRepository.save(task);
     }
@@ -39,9 +54,10 @@ public class TaskServiceImpl implements TaskService {
     @Transactional(readOnly = true)
     @Override
     public List<Task> getTasksByProject(Long projectId){
-        getProject(projectId);
+        projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId));
 
-        return taskRepository.findByProject_Id(projectId);
+        return taskRepository.findAllByProject_Id(projectId);
     }
 
     // read : task 단건 조회
@@ -49,63 +65,18 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task getTask(Long projectId, Long taskId) {
         return taskRepository.findByIdAndProject_Id(taskId, projectId)
-                .orElseThrow(() -> new IllegalArgumentException("Task not found for projectId=" + projectId + ", taskId=" + taskId));
+                .orElseThrow(() -> new TaskNotFoundException(taskId));
     }
 
     // delete
     @Transactional
     @Override
     public void deleteTask(Long projectId, Long taskId) {
-        Task task = getTask(projectId, taskId); // 위 메서드 재사용
-        taskTagRepository.deleteAll(taskTagRepository.findByTask(task));
-        taskRepository.delete(task);
+        Task task = getTask(projectId, taskId);
+        taskRepository.delete(task); // CascadeType.ALL -> TaskTag도 자동 삭제
     }
 
-    // == 메서드 분리 == //
-    private Project getProject(Long projectId) {
-        return projectRepository.findById(projectId)
-                .orElseThrow(() -> new IllegalArgumentException("Project not found: " + projectId));
-    }
-
-    private Task createTaskEntity(CreateTaskRequest request, Project project) {
-        Task task = new Task(request.getTitle(), request.getContent());
-        task.setProject(project);
-        return task;
-    }
-
-    private void setMilestoneIfExists(Task task, Long milestoneId) {
-        if (milestoneId == null) return;
-        MileStone milestone = mileStoneRepository.findById(milestoneId)
-                .orElseThrow(() -> new IllegalArgumentException("Milestone not found: " + milestoneId));
-        task.setMileStone(milestone);
-
-    }
-
-    private void setTagsIfExists(Task task, List<Long> tagIds) {
-        if (tagIds == null || tagIds.isEmpty()) return;
-        List<Tag> tags = tagRepository.findAllById(tagIds);
-        tags.forEach(task::addTaskTag);
-    }
-
-    /*
-    milestone, tag 리스트 반환 -> gateway에서 처리가능. 필요없는 코드
-    @Transactional(readOnly = true)
-    @Override
-    public TaskCreationOptionsResponse getTasksByProject(Long projectId) {
-        List<MileStoneResponse> mileStones = mileStoneRepository.findByProject_Id(projectId)
-                .stream()
-                .map(MileStoneResponse::from)
-                .toList();
-
-        List<TagResponse> tags = tagRepository.findByProject_Id(projectId)
-                .stream()
-                .map(TagResponse::from)
-                .toList();
-
-        return new TaskCreationOptionsResponse(mileStones, tags);
-    }
-     */
-
+    //update
 
 
 }

@@ -1,9 +1,11 @@
 package com.shoppingmall.shoppingmall.controller;
 
-import com.shoppingmall.shoppingmall.dto.CreateTaskRequest;
-import com.shoppingmall.shoppingmall.dto.TaskResponse;
+import com.shoppingmall.shoppingmall.dto.task.CreateTaskRequest;
+import com.shoppingmall.shoppingmall.dto.task.TaskListResponse;
+import com.shoppingmall.shoppingmall.dto.task.TaskResponse;
 import com.shoppingmall.shoppingmall.entity.Task;
 import com.shoppingmall.shoppingmall.service.TaskService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,26 +22,25 @@ public class TaskController {
 
     @PostMapping("/{id}/tasks")
     public ResponseEntity<TaskResponse> create(@PathVariable("id") Long projectId,
-                                               @RequestBody CreateTaskRequest createTaskRequest){
+                                               @Valid @RequestBody CreateTaskRequest createTaskRequest){
         Task task = taskService.create(projectId, createTaskRequest);
-        return ResponseEntity.ok(TaskResponse.from(task));
+        return ResponseEntity.ok().body(TaskResponse.from(task));
     }
 
-    // TODO TaskResponse에 마일스톤, 태그도 추가필요??
     @GetMapping("/{id}/tasks")
-    public ResponseEntity<List<TaskResponse>> getTasksByProject(@PathVariable("id") Long projectId){
-        List<TaskResponse> responses = taskService.getTasksByProject(projectId)
+    public ResponseEntity<List<TaskListResponse>> getTasksByProject(@PathVariable("id") Long projectId){
+        List<TaskListResponse> responses = taskService.getTasksByProject(projectId)
                 .stream()
-                .map(TaskResponse::from)
+                .map(TaskListResponse::from)
                 .toList();
-        return ResponseEntity.ok(responses);
+        return ResponseEntity.ok().body(responses);
     }
 
     @GetMapping("/{id}/tasks/{taskId}")
     public ResponseEntity<TaskResponse> getTask(@PathVariable("id") Long projectId,
                                                 @PathVariable("taskId") Long taskId) {
         Task task = taskService.getTask(projectId,taskId);
-        return ResponseEntity.ok(TaskResponse.from(task));
+        return ResponseEntity.ok().body(TaskResponse.from(task));
     }
 
     @DeleteMapping("/{id}/tasks/{taskId}")

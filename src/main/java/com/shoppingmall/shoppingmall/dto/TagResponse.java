@@ -1,16 +1,9 @@
-//package com.shoppingmall.shoppingmall.dto;
-//
-//import com.shoppingmall.shoppingmall.entity.Tag;
-//import lombok.AllArgsConstructor;
-//import lombok.Getter;
-//
-//@Getter
-//@AllArgsConstructor
-//public class TagResponse {
-//    private long id;
-//    private String name;
-//
-//    public static TagResponse from(Tag t){
-//        return new TagResponse(t.getId(), t.getName());
-//    }
-//}
+package com.shoppingmall.shoppingmall.dto;
+
+import com.shoppingmall.shoppingmall.entity.Tag;
+
+public record TagResponse(Long id, String name) {
+    public static TagResponse from(Tag tag){
+        return new TagResponse(tag.getId(), tag.getName());
+    }
+}

@@ -1,6 +1,6 @@
 package com.shoppingmall.shoppingmall.service;
 
-import com.shoppingmall.shoppingmall.dto.CreateTaskRequest;
+import com.shoppingmall.shoppingmall.dto.task.CreateTaskRequest;
 import com.shoppingmall.shoppingmall.entity.Task;
 
 import java.util.List;

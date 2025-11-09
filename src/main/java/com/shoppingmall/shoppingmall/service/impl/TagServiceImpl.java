@@ -1,10 +1,11 @@
 package com.shoppingmall.shoppingmall.service.impl;
 
-import com.shoppingmall.shoppingmall.entity.MileStone;
+import com.shoppingmall.shoppingmall.dto.CreateTagRequest;
 import com.shoppingmall.shoppingmall.entity.Project;
 import com.shoppingmall.shoppingmall.entity.Tag;
 import com.shoppingmall.shoppingmall.exception.AlreadyExistException;
 import com.shoppingmall.shoppingmall.exception.NotFoundException;
+import com.shoppingmall.shoppingmall.exception.ProjectNotFoundException;
 import com.shoppingmall.shoppingmall.repository.ProjectRepository;
 import com.shoppingmall.shoppingmall.repository.TagRepository;
 import com.shoppingmall.shoppingmall.service.TagService;
@@ -16,20 +17,19 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
-
-    private final TagRepository tagRepository;
     private final ProjectRepository projectRepository;
+    private final TagRepository tagRepository;
 
     @Override
-    public Tag create(Long projectId, Tag tag) {
-
+    public Tag create(Long projectId, CreateTagRequest createTagRequest) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new NotFoundException("Project not found with id: " + projectId));
+                .orElseThrow(() -> new ProjectNotFoundException(projectId));
 
-        if (tagRepository.existsByName(tag.getName())) {
-            throw new AlreadyExistException(tag.getName() + " 이름의 태그가 이미 존재합니다");
+        if(tagRepository.existsByName(createTagRequest.getName())){
+            throw new AlreadyExistException("이미 존재하는 태그입니다.: " + createTagRequest.getName());
         }
 
+        Tag tag = new Tag(createTagRequest.getName());
         tag.setProject(project);
 
         return tagRepository.save(tag);
@@ -37,7 +37,8 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Tag> getTags(Long projectId) {
-        return tagRepository.findByProjectId(projectId);
+        projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId));
     }
 
     @Override
@@ -46,15 +47,12 @@ public class TagServiceImpl implements TagService {
         tag.setName(updatedTag.getName());
 
         return tagRepository.save(tag);
+        return tagRepository.findAllByProjectId(projectId);
     }
 
     @Override
-    public void delete(Long projectId, Long tagId) {
-        if(!tagRepository.existsById(tagId)){
-            throw new NotFoundException("해당하는 tag가 없습니다 : " + tagId);
-        }
-        tagRepository.deleteById(tagId);
+    public void deleteTag(Long projectId, Long tagId) {
+        Tag tag = tagRepository.findByIdAndProjectId(tagId, projectId);
+        tagRepository.delete(tag);
     }
-
-
 }

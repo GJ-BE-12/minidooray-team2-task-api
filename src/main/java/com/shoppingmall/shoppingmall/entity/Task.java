@@ -17,22 +17,26 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(length = 50, nullable = false)
     private String title;
 
+    @Lob
+    @Column(nullable = false)
     private String content;
 
     @ManyToOne
+    @JoinColumn(name = "project_id", nullable = false)
     private Project project;
-
-//    @OneToMany
-//    private List<MileStone> mileStones;
 
     @ManyToOne
     @JoinColumn(name = "milestone_id")
-    private MileStone mileStone; // 하나의 Task는 하나의 Milestone에만 속함
+    private MileStone mileStone;
 
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TaskTag> taskTags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "task")
+    private List<Comment> comments = new ArrayList<>();
 
     public Task(String title, String content) {
         this.title = title;
