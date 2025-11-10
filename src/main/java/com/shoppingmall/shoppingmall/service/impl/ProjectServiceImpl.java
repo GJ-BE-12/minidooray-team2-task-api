@@ -12,8 +12,11 @@ import com.shoppingmall.shoppingmall.repository.ProjectMemberRepository;
 import com.shoppingmall.shoppingmall.repository.ProjectRepository;
 import com.shoppingmall.shoppingmall.service.ProjectService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository projectMemberRepository;
+    private final RestTemplate restTemplate;
 
     // memberId 해당하는 member가 프로젝트 생성
     @Transactional
@@ -88,18 +92,33 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     @Override
     public void addMemberToProject(long projectId, Long memberId) {
+        String url = "http://localhost:8081/members/";
+        try {
+            HttpEntity<Long> request = new HttpEntity<>(memberId);
+            ResponseEntity<Boolean> response = restTemplate.postForEntity(url + memberId,
+                    request,
+                    Boolean.class
+            );
+            Boolean flag = response.getBody();
 
-        // 멤버에 맞는 프로젝트가 없을시 예외
-        Project project = projectRepository.findById(projectId);
+            if (!flag) {
+                throw new IllegalStateException();
+            }
 
-        // 해당 프로젝트에 멤버가 이미 존재할시 예외
-        if(projectMemberRepository.existsByProjectIdAndMemberId(projectId, memberId)){
-            throw new AlreadyExistException("Member ID already exists in the project");
+            // 멤버에 맞는 프로젝트가 없을시 예외
+            Project project = projectRepository.findById(projectId);
+
+            // 해당 프로젝트에 멤버가 이미 존재할시 예외
+            if(projectMemberRepository.existsByProjectIdAndMemberId(projectId, memberId)){
+                throw new AlreadyExistException("Member ID already exists in the project");
+            }
+
+            ProjectMember newMember = new ProjectMember(memberId);
+            project.addProjectMember(newMember);
+
+            projectMemberRepository.save(newMember);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-
-        ProjectMember newMember = new ProjectMember(memberId);
-        project.addProjectMember(newMember);
-
-        projectMemberRepository.save(newMember);
     }
 }

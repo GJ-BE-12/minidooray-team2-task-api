@@ -10,13 +10,13 @@ memberId: 2
 }
 
 ### 프로젝트 조회
-GET localhost:8082/projects/by-member/2
-memberID: 2
+GET localhost:8082/projects/by-member/1
+memberID: 1
 
 ### 프로젝트에 멤버 추가
-POST localhost:8082/projects/2/members
+POST localhost:8082/projects/1/members
 Content-Type: application/json
-memberID: 2
+memberID: 1
 
-1
+5
 

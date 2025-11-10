@@ -9,3 +9,9 @@ memberId: 1
 ### comment만 조회
 GET localhost:8082/projects/1/tasks/2/comments
 memberId: 1
+
+###
+POST localhost:8081/members/checkId
+Content-Type: application/json
+
+1
