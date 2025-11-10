@@ -103,10 +103,10 @@ public class TaskServiceImpl implements TaskService {
         task.setTitle(request.getTaskTitle());
         task.setContent(request.getTaskContent());
 
-       if(request.getMilestoneIdList() != null){
-           MileStone mileStone = mileStoneRepository.findByIdAndProjectId(request.getMilestoneIdList(),projectId);
+       if(request.getMilestoneId() != null){
+           MileStone mileStone = mileStoneRepository.findByIdAndProjectId(request.getMilestoneId(),projectId);
            if(mileStone == null) {
-               throw new MileStoneNotFoundException(request.getMilestoneIdList());
+               throw new MileStoneNotFoundException(request.getMilestoneId());
            }
            task.setMileStone(mileStone);
        }else {

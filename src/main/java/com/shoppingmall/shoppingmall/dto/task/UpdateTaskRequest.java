@@ -21,6 +21,6 @@ public class UpdateTaskRequest {
     @Size(max = 1000, message = "내용은 1000자 이내로 작성해주세요.")
     private String taskContent;
 
-    private Long milestoneIdList;
+    private Long milestoneId;
     private List<Long> tagIdList = new ArrayList<>();
 }

@@ -45,11 +45,11 @@ public class TaskController {
     }
 
     @PutMapping("/{projectId}/tasks/{taskId}")
-    public ResponseEntity<Long> updateTask(@PathVariable("projectId") Long projectId,
+    public ResponseEntity<Void> updateTask(@PathVariable("projectId") Long projectId,
                                            @PathVariable("taskId") Long taskId,
                                            @Valid @RequestBody UpdateTaskRequest updateTaskRequest){
         taskService.updateTask(projectId, taskId, updateTaskRequest);
-        return ResponseEntity.ok().body(taskId);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{projectId}/tasks/{taskId}")
