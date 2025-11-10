@@ -10,6 +10,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateMileStoneRequest {
-    String name;
+public class MileStoneRequest {
+    String mileStoneName;
 }

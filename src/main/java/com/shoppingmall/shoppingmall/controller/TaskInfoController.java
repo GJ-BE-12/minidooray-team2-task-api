@@ -14,13 +14,13 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/projects/{id}/tasks/{taskId}")
+@RequestMapping("/projects/{projectId}/tasks/{taskId}")
 public class TaskInfoController {
 
     private final TaskInfoService taskInfoService;
 
     @GetMapping("/tags")
-    public ResponseEntity<List<TaskTagResponse>> getTaskTag(@PathVariable("id") Long projectId,
+    public ResponseEntity<List<TaskTagResponse>> getTaskTag(@PathVariable("projectId") Long projectId,
                                                             @PathVariable("taskId") Long taskId){
         List<TaskTagResponse> taskTags = taskInfoService.getTaskTags(projectId, taskId)
                 .stream()
@@ -30,15 +30,15 @@ public class TaskInfoController {
         return ResponseEntity.ok().body(taskTags);
     }
 
-    @GetMapping("/milestone")
-    public ResponseEntity<String> getTaskMileStone(@PathVariable("id") Long projectId,
+    @GetMapping("/milestones")
+    public ResponseEntity<String> getTaskMileStone(@PathVariable("projectId") Long projectId,
                                                       @PathVariable("taskId") Long taskId){
         MileStone mileStone = taskInfoService.getTaskMileStone(projectId, taskId);
         return ResponseEntity.ok().body(mileStone.getName());
     }
 
     @GetMapping("/comments")
-    public ResponseEntity<List<Long>> getComments(@PathVariable("id") Long projectId,
+    public ResponseEntity<List<Long>> getComments(@PathVariable("projectId") Long projectId,
                                                   @PathVariable("taskId") Long taskId){
         List<Long> comments = taskInfoService.getTaskComments(projectId, taskId);
         return ResponseEntity.ok().body(comments);

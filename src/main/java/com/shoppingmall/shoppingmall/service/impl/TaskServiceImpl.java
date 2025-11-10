@@ -27,29 +27,28 @@ public class TaskServiceImpl implements TaskService {
 
     @Transactional
     @Override
-    public Task create(Long projectId, CreateTaskRequest request) {
+    public Task create(long projectId, CreateTaskRequest request) {
         // 1. 프로젝트 유효성 검사
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId));
+        Project project = projectRepository.findById(projectId);
 
         // 2. Task 생성 + project set
-        Task task = new Task(request.getTitle(), request.getContent());
+        Task task = new Task(request.getTaskTitle(), request.getTaskContent());
         task.setProject(project);
 
         // 3. 마일스톤 설정
         // 마일스톤 설정
-        if (request.getMilestoneId() != null) {
-            MileStone mileStone = mileStoneRepository.findByIdAndProjectId(request.getMilestoneId(), projectId);
+        if (request.getMilestoneIdList() != null) {
+            MileStone mileStone = mileStoneRepository.findByIdAndProjectId(request.getMilestoneIdList(), projectId);
             if (mileStone == null) {
-                throw new MileStoneNotFoundException(request.getMilestoneId());
+                throw new MileStoneNotFoundException(request.getMilestoneIdList());
             }
             task.setMileStone(mileStone);
         }
 
         // 태그 설정
-        if (request.getTagIds() != null && !request.getTagIds().isEmpty()) {
-            List<Tag> tags = tagRepository.findAllByIdInAndProjectId(request.getTagIds(), projectId);
-            if (tags.size() != request.getTagIds().size()) {
+        if (request.getTagIdList() != null && !request.getTagIdList().isEmpty()) {
+            List<Tag> tags = tagRepository.findAllByIdInAndProjectId(request.getTagIdList(), projectId);
+            if (tags.size() != request.getTagIdList().size()) {
                 throw new InvalidRequestException("ProjectId: " + projectId + "에 존재하지 않는 태그가 포함되어 있습니다.");
             }
             tags.forEach(task::addTaskTag);
@@ -57,8 +56,8 @@ public class TaskServiceImpl implements TaskService {
 
 
         // 4. 태그 설정
-        List<Tag> tags = tagRepository.findAllByIdInAndProjectId(request.getTagIds(), projectId);
-        if(tags.size() != request.getTagIds().size()){
+        List<Tag> tags = tagRepository.findAllByIdInAndProjectId(request.getTagIdList(), projectId);
+        if(tags.size() != request.getTagIdList().size()){
             throw new InvalidRequestException("ProjectId: " + projectId + "에 존재하지 않는 태그가 포함되어 있습니다.");
         }
         tags.forEach(task::addTaskTag);
@@ -70,9 +69,6 @@ public class TaskServiceImpl implements TaskService {
     @Transactional(readOnly = true)
     @Override
     public List<Task> getTasksByProject(Long projectId){
-        projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId));
-
         return taskRepository.findAllByProject_Id(projectId);
     }
 
@@ -80,9 +76,6 @@ public class TaskServiceImpl implements TaskService {
     @Transactional(readOnly = true)
     @Override
     public Task getTask(Long projectId, Long taskId) {
-        projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId));
-
         return taskRepository.findByIdAndProject_Id(taskId, projectId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
     }
@@ -91,9 +84,6 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     @Override
     public void deleteTask(Long projectId, Long taskId) {
-        projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId));
-
         Task task = getTask(projectId, taskId);
         taskRepository.delete(task); // CascadeType.ALL -> TaskTag도 자동 삭제
     }
@@ -102,40 +92,37 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     @Override
     public void updateTask(Long projectId, Long taskId, UpdateTaskRequest request){
-        projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId));
-
         // 기존 task 조회
        Task task = getTask(projectId, taskId);
 
        // 수정
-       if(request.getTitle() != null){
-           if (request.getTitle().isBlank()) {
+       if(request.getTaskTitle() != null){
+           if (request.getTaskTitle().isBlank()) {
                throw new InvalidRequestException("제목은 공백일 수 없습니다.");
            }
-           task.setTitle(request.getTitle());
+           task.setTitle(request.getTaskTitle());
        }
 
-       if (request.getContent() != null) {
-           if (request.getContent().isBlank()) {
+       if (request.getTaskContent() != null) {
+           if (request.getTaskContent().isBlank()) {
                throw new InvalidRequestException("내용은 공백일 수 없습니다.");
            }
-           task.setContent(request.getContent());
+           task.setContent(request.getTaskContent());
        }
 
-       if(request.getMilestoneId() != null){
-           MileStone mileStone = mileStoneRepository.findByIdAndProjectId(request.getMilestoneId(),projectId);
+       if(request.getMilestoneIdList() != null){
+           MileStone mileStone = mileStoneRepository.findByIdAndProjectId(request.getMilestoneIdList(),projectId);
            if(mileStone == null) {
-               throw new MileStoneNotFoundException(request.getMilestoneId());
+               throw new MileStoneNotFoundException(request.getMilestoneIdList());
            }
            task.setMileStone(mileStone);
        }
 
-       if (request.getTagIds() != null) {
+       if (request.getTagIdList() != null) {
            task.getTaskTags().clear();
-           if (!request.getTagIds().isEmpty()) {
-                List<Tag> tags = tagRepository.findAllByIdInAndProjectId(request.getTagIds(), projectId);
-                if(tags.size() != request.getTagIds().size()){
+           if (!request.getTagIdList().isEmpty()) {
+                List<Tag> tags = tagRepository.findAllByIdInAndProjectId(request.getTagIdList(), projectId);
+                if(tags.size() != request.getTagIdList().size()){
                     throw new InvalidRequestException(
                             "ProjectId: " + projectId + "에 존재하지 않는 태그가 포함되어 있습니다."
                     );

@@ -39,8 +39,8 @@ public class ProjectController{
     }
 
     // uri로 들어온 ProjectId에 해당하는 프로젝트에 memberId를 저장함
-    @PostMapping("/{id}/members")
-    public ResponseEntity<ProjectMember> createProjectMember(@PathVariable("id") Long projectId,
+    @PostMapping("/{projectId}/members")
+    public ResponseEntity<ProjectMember> createProjectMember(@PathVariable("projectId") Long projectId,
                                                              @RequestBody Long memberId){
         projectService.addMemberToProject(projectId, memberId);
 

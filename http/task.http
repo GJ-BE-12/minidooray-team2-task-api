@@ -1,40 +1,39 @@
 ### task 생성
-POST http://localhost:8082/api/projects/2/tasks
+POST http://localhost:8082/projects/1/tasks
 Content-Type: application/json
 Accept: application/json
+memberId: 1
 
 {
-  "title": "title2",
-  "content": "content2",
-  "milestoneId": 4,
-  "tagIds": [4]
+  "taskTitle": "title1",
+  "taskContent": "content1",
+  "milestoneIdList": 1,
+  "tagIdList": [1]
 }
-
-###
-POST http://localhost:8082/api/projects/3/members
-Content-Type: application/json
-
-3
 
 
 ### 전체 task 조회
-GET http://localhost:8082/api/projects/1/tasks
+GET http://localhost:8082/projects/1/tasks
 Accept: application/json
+memberId: 1
 
 ### 단일 task 조회
-GET http://localhost:8082/api/projects/1/tasks/1
+GET http://localhost:8082/projects/1/tasks/2
 Accept: application/json
+memberId: 1
 
 ### task 삭제
-DELETE http://localhost:8082/api/projects/1/tasks/1
+DELETE http://localhost:8082/projects/1/tasks/1
+memberId: 1
 
 ### task 수정
-PUT http://localhost:8082/api/projects/2/tasks/2
+PUT http://localhost:8082/projects/1/tasks/2
 Content-Type: application/json
+memberId: 1
 
 {
-  "title": "title_update",
-  "content": "content_update",
-  "milestoneId": null,
-  "tagIds": null
+  "taskTitle": "title_update",
+  "taskContent": "content_update",
+  "milestoneIdList": 2,
+  "tagIdList": [2]
 }

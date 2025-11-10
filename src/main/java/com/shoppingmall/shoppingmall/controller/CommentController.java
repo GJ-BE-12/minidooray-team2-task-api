@@ -18,7 +18,7 @@ public class CommentController {
                                             @PathVariable Long taskId,
                                             @RequestHeader("memberId") Long memberId,
                                             @RequestBody CommentRequest createCommentRequest){
-        commentService.create(memberId, taskId, createCommentRequest.getContent());
+        commentService.create(memberId, taskId, createCommentRequest.getCommentContent());
         return ResponseEntity.ok().body(taskId);
     }
 
@@ -29,7 +29,7 @@ public class CommentController {
                                        @RequestHeader("memberId") Long memberId,
                                        @RequestBody CommentRequest commentRequest
                                        ){
-        commentService.update(memberId, taskId, commentId, commentRequest.getContent());
+        commentService.update(memberId, taskId, commentId, commentRequest.getCommentContent());
         return ResponseEntity.ok().body(projectId);
     }
 

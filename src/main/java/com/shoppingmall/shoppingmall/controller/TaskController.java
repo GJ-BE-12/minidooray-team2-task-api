@@ -21,15 +21,15 @@ public class TaskController {
 
     private final TaskService taskService;
 
-    @PostMapping("/{id}/tasks")
-    public ResponseEntity<TaskResponse> create(@PathVariable("id") Long projectId,
+    @PostMapping("/{projectId}/tasks")
+    public ResponseEntity<TaskResponse> create(@PathVariable("projectId") Long projectId,
                                                @Valid @RequestBody CreateTaskRequest createTaskRequest){
         Task task = taskService.create(projectId, createTaskRequest);
         return ResponseEntity.ok().body(TaskResponse.from(task));
     }
 
-    @GetMapping("/{id}/tasks")
-    public ResponseEntity<List<TaskListResponse>> getTasksByProject(@PathVariable("id") Long projectId){
+    @GetMapping("/{projectId}/tasks")
+    public ResponseEntity<List<TaskListResponse>> getTasksByProject(@PathVariable("projectId") Long projectId){
         List<TaskListResponse> responses = taskService.getTasksByProject(projectId)
                 .stream()
                 .map(TaskListResponse::from)
@@ -37,23 +37,23 @@ public class TaskController {
         return ResponseEntity.ok().body(responses);
     }
 
-    @GetMapping("/{id}/tasks/{taskId}")
-    public ResponseEntity<TaskResponse> getTask(@PathVariable("id") Long projectId,
+    @GetMapping("/{projectId}/tasks/{taskId}")
+    public ResponseEntity<TaskResponse> getTask(@PathVariable("projectId") Long projectId,
                                                 @PathVariable("taskId") Long taskId) {
         Task task = taskService.getTask(projectId,taskId);
         return ResponseEntity.ok().body(TaskResponse.from(task));
     }
 
-    @PutMapping("/{id}/tasks/{taskId}")
-    public ResponseEntity<Long> updateTask(@PathVariable("id") Long projectId,
+    @PutMapping("/{projectId}/tasks/{taskId}")
+    public ResponseEntity<Long> updateTask(@PathVariable("projectId") Long projectId,
                                            @PathVariable("taskId") Long taskId,
                                            @Valid @RequestBody UpdateTaskRequest updateTaskRequest){
         taskService.updateTask(projectId, taskId, updateTaskRequest);
         return ResponseEntity.ok().body(taskId);
     }
 
-    @DeleteMapping("/{id}/tasks/{taskId}")
-    public ResponseEntity<Void> deleteTask(@PathVariable("id") Long projectId,
+    @DeleteMapping("/{projectId}/tasks/{taskId}")
+    public ResponseEntity<Void> deleteTask(@PathVariable("projectId") Long projectId,
                                            @PathVariable("taskId") Long taskId) {
         taskService.deleteTask(projectId,taskId);
         return ResponseEntity.noContent().build();

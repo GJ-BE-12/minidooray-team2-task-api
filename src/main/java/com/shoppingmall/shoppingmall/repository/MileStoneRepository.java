@@ -10,4 +10,6 @@ public interface MileStoneRepository extends JpaRepository<MileStone, Long> {
     List<MileStone> findByProjectId(Long projectId);
     boolean existsByProjectAndName(Project project, String name);
     MileStone findByIdAndProjectId(Long mileStoneId, Long projectId);
+
+    boolean existsByIdAndProjectId(long id, long projectId);
 }

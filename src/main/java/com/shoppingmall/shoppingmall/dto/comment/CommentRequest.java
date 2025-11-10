@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class CommentRequest {
-    private String content;
+    private String commentContent;
 }

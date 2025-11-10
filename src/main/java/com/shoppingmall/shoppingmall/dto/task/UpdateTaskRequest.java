@@ -12,11 +12,11 @@ import java.util.List;
 @NoArgsConstructor
 public class UpdateTaskRequest {
     @Size(max = 50, message = "제목은 50자 이내로 작성해야 합니다.")
-    private String title;
+    private String taskTitle;
 
     @Size(max = 1000, message = "내용은 1000자 이내로 작성해주세요.")
-    private String content;
+    private String taskContent;
 
-    private Long milestoneId;
-    private List<Long> tagIds;
+    private Long milestoneIdList;
+    private List<Long> tagIdList;
 }

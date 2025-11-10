@@ -24,17 +24,12 @@ public class TaskInfoServiceImpl implements TaskInfoService {
 
     @Override
     public List<TaskTag> getTaskTags(Long projectId, Long taskId) {
-        // + 프로젝트 존재여부
-        taskRepository.findById(taskId)
-                .orElseThrow(() -> new TaskNotFoundException(taskId));
-
         return taskTagRepository.findAllByTaskId(taskId);
     }
 
     @Override
-    public MileStone getTaskMileStone(Long projectId, Long taskId) {
-        Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new TaskNotFoundException(taskId));
+    public MileStone getTaskMileStone(Long projectId, long taskId) {
+        Task task = taskRepository.findById(taskId);
 
         return task.getMileStone();
     }

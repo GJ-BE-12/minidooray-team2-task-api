@@ -24,15 +24,14 @@ public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
 
     @Override
-    public Tag create(Long projectId, CreateTagRequest createTagRequest) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId));
+    public Tag create(long projectId, CreateTagRequest createTagRequest) {
+        Project project = projectRepository.findById(projectId);
 
-        if(tagRepository.existsByName(createTagRequest.getName())){
-            throw new TagAlreadyExistException(createTagRequest.getName());
+        if(tagRepository.existsByName(createTagRequest.getTagName())){
+            throw new TagAlreadyExistException(createTagRequest.getTagName());
         }
 
-        Tag tag = new Tag(createTagRequest.getName());
+        Tag tag = new Tag(createTagRequest.getTagName());
         tag.setProject(project);
 
         return tagRepository.save(tag);
@@ -40,22 +39,26 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Tag> getTags(Long projectId) {
-        projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId));
         return tagRepository.findAllByProjectId(projectId);
     }
 
     @Transactional
     @Override
     public void updateTag(Long projectId, Long tagId, CreateTagRequest updatedTag) {
-        Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new TagNotFoundException(tagId));
-        tag.setName(updatedTag.getName());
+        Tag tag = tagRepository.findByIdAndProjectId(tagId,projectId);
+        if(tag == null){
+            throw new TagNotFoundException(tagId);
+        }
+        tag.setName(updatedTag.getTagName());
     }
 
     @Transactional
     @Override
     public void deleteTag(Long projectId, Long tagId) {
-        Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new TagNotFoundException(tagId));
+        Tag tag = tagRepository.findByIdAndProjectId(tagId, projectId);
+        if(tag == null){
+            throw new TagNotFoundException(tagId);
+        }
         tagRepository.delete(tag);
     }
 }

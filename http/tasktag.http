@@ -1,8 +1,11 @@
 ### tag만 조회
 GET localhost:8082/projects/1/tasks/2/tags
+memberId: 1
 
 ### 마일스토만 조회
 GET localhost:8082/projects/1/tasks/2/milestone
+memberId: 1
 
 ### comment만 조회
 GET localhost:8082/projects/1/tasks/2/comments
+memberId: 1

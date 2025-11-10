@@ -6,7 +6,7 @@ import com.shoppingmall.shoppingmall.entity.Tag;
 import java.util.List;
 
 public interface TagService {
-    Tag create(Long projectId, CreateTagRequest createTagRequest);
+    Tag create(long projectId, CreateTagRequest createTagRequest);
     List<Tag> getTags(Long projectId);
     void deleteTag(Long projectId, Long tagId);
     void updateTag(Long projectId, Long tagId, CreateTagRequest updatedTag);

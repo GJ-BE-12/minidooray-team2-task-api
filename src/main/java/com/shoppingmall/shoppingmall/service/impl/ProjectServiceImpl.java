@@ -77,64 +77,29 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     @Override
     public List<Project> getProjectsByMemberId(Long memberId){
-        return projectRepository.findProjectsByMemberId(memberId);
+        List<Project> projectList = projectRepository.findProjectsByMemberId(memberId);
+        if(projectList.isEmpty()){
+            throw new ProjectNotFoundException(memberId);
+        }
+        return projectList;
     }
 
     // 프로젝트에 멤버 등록
     @Transactional
     @Override
-    public ProjectMember addMemberToProject(Long projectId, Long memberId) {
+    public void addMemberToProject(long projectId, Long memberId) {
 
         // 멤버에 맞는 프로젝트가 없을시 예외
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId));
-
-
+        Project project = projectRepository.findById(projectId);
 
         // 해당 프로젝트에 멤버가 이미 존재할시 예외
         if(projectMemberRepository.existsByProjectIdAndMemberId(projectId, memberId)){
             throw new AlreadyExistException("Member ID already exists in the project");
         }
 
-
-
         ProjectMember newMember = new ProjectMember(memberId);
         project.addProjectMember(newMember);
 
-        return projectMemberRepository.save(newMember);
+        projectMemberRepository.save(newMember);
     }
-
-
-
-//    @Transactional
-//    @Override
-//    public Project getByName(String name) {
-//        return projectRepository.getByProjectName(name);
-//    }
-//
-//    @Transactional
-//    @Override
-//    public List<Project> getByState(State state) {
-//        return projectRepository.getByState(state);
-//    }
-//
-//    @Transactional
-//    @Override
-//    public void deleteByName(String name) {
-//        if(!projectRepository.existsByProjectName(name)){
-//            throw new IllegalStateException("Project(name = " + name + ") no exists.");
-//        }
-//        projectRepository.deleteByProjectName(name);
-//    }
-//
-//    @Transactional
-//    @Override
-//    public void updateStateByName(String name, State state) {
-//        if(!projectRepository.existsByName(name)){
-//            throw new IllegalStateException("Project(name = " + name + ") no exists.");
-//        }
-//        projectRepository.updateStateByName(name, state);
-//    }
-
-
 }

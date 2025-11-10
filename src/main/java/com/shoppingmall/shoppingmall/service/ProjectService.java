@@ -7,7 +7,7 @@ import java.util.List;
 public interface ProjectService {
     Project create(String name, Long memberId, List<String> tagNames, List<String> mileStoneNames);
     List<Project> getProjectsByMemberId(Long memberId);
-    ProjectMember addMemberToProject(Long projectId, Long memberId);
+    void addMemberToProject(long projectId, Long memberId);
 //    Project getByName(String name);
 //    List<Project> getByState(State state);
 //    void deleteByName(String name);

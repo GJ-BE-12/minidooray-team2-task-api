@@ -1,6 +1,6 @@
 package com.shoppingmall.shoppingmall.service.impl;
 
-import com.shoppingmall.shoppingmall.dto.mileStone.CreateMileStoneRequest;
+import com.shoppingmall.shoppingmall.dto.mileStone.MileStoneRequest;
 import com.shoppingmall.shoppingmall.entity.MileStone;
 import com.shoppingmall.shoppingmall.entity.Project;
 import com.shoppingmall.shoppingmall.exception.already.MileStoneAlreadyExistException;
@@ -24,17 +24,16 @@ public class MileStoneServiceImpl implements MileStoneService {
 
     // 마일스톤을 생성함
     @Override
-    public MileStone create(long projectId, long memberId, CreateMileStoneRequest createMileStoneRequest) {
+    public MileStone create(long projectId, long memberId, MileStoneRequest createMileStoneRequest) {
 
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new NotFoundException("Project not found with id: " + projectId));
+        Project project = projectRepository.findById(projectId);
 
         // 마일스톤의 이름이 존재할시 예외처리
-        if(mileStoneRepository.existsByProjectAndName(project, createMileStoneRequest.getName())){
-            throw new MileStoneAlreadyExistException(createMileStoneRequest.getName());
+        if(mileStoneRepository.existsByProjectAndName(project, createMileStoneRequest.getMileStoneName())){
+            throw new MileStoneAlreadyExistException(createMileStoneRequest.getMileStoneName());
         }
 
-        MileStone mileStone = new MileStone(createMileStoneRequest.getName());
+        MileStone mileStone = new MileStone(createMileStoneRequest.getMileStoneName());
         mileStone.setProject(project);
 
         return mileStoneRepository.save(mileStone);
@@ -47,15 +46,18 @@ public class MileStoneServiceImpl implements MileStoneService {
 
     @Transactional
     @Override
-    public void update(long projectId, long milestoneId, MileStone updatedMileStone) {
-        MileStone mileStone = mileStoneRepository.findById(milestoneId).orElseThrow(() -> new NotFoundException("해당하는 mileStone이 없습니다 : " + milestoneId));
-        mileStone.setName(updatedMileStone.getName());
+    public void update(long projectId, long milestoneId, MileStoneRequest updatedMileStone) {
+        MileStone mileStone = mileStoneRepository.findByIdAndProjectId(milestoneId, projectId);
+        if(mileStone == null){
+            throw new MileStoneNotFoundException(milestoneId);
+        }
+        mileStone.setName(updatedMileStone.getMileStoneName());
     }
 
     @Transactional
     @Override
     public void delete(long projectId, long milestoneId) {
-        if(!mileStoneRepository.existsById(milestoneId)){
+        if(mileStoneRepository.existsByIdAndProjectId(milestoneId, projectId)){
             throw new MileStoneNotFoundException(milestoneId);
         }
         mileStoneRepository.deleteById(milestoneId);

@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface TaskInfoService {
     List<TaskTag> getTaskTags(Long projectId, Long taskId);
-    MileStone getTaskMileStone(Long projectId, Long taskId);
+    MileStone getTaskMileStone(Long projectId, long taskId);
     List<Long> getTaskComments(Long projectId, Long taskId);
 }

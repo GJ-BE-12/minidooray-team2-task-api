@@ -1,11 +1,9 @@
 package com.shoppingmall.shoppingmall.controller;
 
-import com.shoppingmall.shoppingmall.dto.mileStone.CreateMileStoneRequest;
+import com.shoppingmall.shoppingmall.dto.mileStone.MileStoneRequest;
 import com.shoppingmall.shoppingmall.dto.mileStone.GetMileStoneResponse;
-import com.shoppingmall.shoppingmall.entity.MileStone;
 import com.shoppingmall.shoppingmall.service.MileStoneService;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +19,7 @@ public class MileStoneController {
     // mileStone을 추가하는 컨트롤러
     @PostMapping("/{projectId}/milestones")
     public ResponseEntity<Long> create(@PathVariable long projectId,
-                                                          @RequestBody CreateMileStoneRequest createMileStoneRequest,
+                                                          @RequestBody MileStoneRequest createMileStoneRequest,
                                                           @RequestHeader("memberId") Long memberId){
         mileStoneService.create(projectId, memberId, createMileStoneRequest);
         return ResponseEntity.ok().body(projectId);
@@ -41,7 +39,7 @@ public class MileStoneController {
     @PutMapping("/{projectId}/milestones/{milestoneId}")
     public ResponseEntity<Long> update(@PathVariable long projectId,
                             @PathVariable long milestoneId,
-                            @RequestBody MileStone updatedMileStone) {
+                            @RequestBody MileStoneRequest updatedMileStone) {
         mileStoneService.update(projectId, milestoneId, updatedMileStone);
         return ResponseEntity.ok().body(projectId);
     }

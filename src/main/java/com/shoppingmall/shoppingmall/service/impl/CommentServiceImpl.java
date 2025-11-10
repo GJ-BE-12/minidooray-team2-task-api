@@ -20,8 +20,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment create(long memberId, long taskId, String content) {
-        Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new TaskNotFoundException(taskId));
+        Task task = taskRepository.findById(taskId);
 
         return commentRepository.save(new Comment(memberId, task, content));
     }
@@ -29,8 +28,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public void update(long memberId, long taskId, long commentId, String content) {
-        taskRepository.findById(taskId)
-                .orElseThrow(() -> new TaskNotFoundException(taskId));
+        taskRepository.findById(taskId);
 
         Comment comment = commentRepository.getReferenceById(commentId);
         comment.setContent(content);
