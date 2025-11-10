@@ -54,14 +54,6 @@ public class TaskServiceImpl implements TaskService {
             tags.forEach(task::addTaskTag);
         }
 
-
-        // 4. 태그 설정
-        List<Tag> tags = tagRepository.findAllByIdInAndProjectId(request.getTagIdList(), projectId);
-        if(tags.size() != request.getTagIdList().size()){
-            throw new InvalidRequestException("ProjectId: " + projectId + "에 존재하지 않는 태그가 포함되어 있습니다.");
-        }
-        tags.forEach(task::addTaskTag);
-
         return taskRepository.save(task);
     }
 

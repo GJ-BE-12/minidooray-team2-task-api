@@ -8,6 +8,7 @@ public interface ProjectService {
     Project create(String name, Long memberId, List<String> tagNames, List<String> mileStoneNames);
     List<Project> getProjectsByMemberId(Long memberId);
     void addMemberToProject(long projectId, Long memberId);
+    List<Long> getMemberIdByProjectId(long projectId);
 //    Project getByName(String name);
 //    List<Project> getByState(State state);
 //    void deleteByName(String name);

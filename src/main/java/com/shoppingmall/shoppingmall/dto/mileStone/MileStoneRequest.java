@@ -11,5 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MileStoneRequest {
-    String mileStoneName;
+    String milestoneName;
 }

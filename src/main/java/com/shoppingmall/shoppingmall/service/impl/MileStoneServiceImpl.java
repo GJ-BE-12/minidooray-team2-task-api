@@ -29,11 +29,11 @@ public class MileStoneServiceImpl implements MileStoneService {
         Project project = projectRepository.findById(projectId);
 
         // 마일스톤의 이름이 존재할시 예외처리
-        if(mileStoneRepository.existsByProjectAndName(project, createMileStoneRequest.getMileStoneName())){
-            throw new MileStoneAlreadyExistException(createMileStoneRequest.getMileStoneName());
+        if(mileStoneRepository.existsByProjectAndName(project, createMileStoneRequest.getMilestoneName())){
+            throw new MileStoneAlreadyExistException(createMileStoneRequest.getMilestoneName());
         }
 
-        MileStone mileStone = new MileStone(createMileStoneRequest.getMileStoneName());
+        MileStone mileStone = new MileStone(createMileStoneRequest.getMilestoneName());
         mileStone.setProject(project);
 
         return mileStoneRepository.save(mileStone);
@@ -51,7 +51,7 @@ public class MileStoneServiceImpl implements MileStoneService {
         if(mileStone == null){
             throw new MileStoneNotFoundException(milestoneId);
         }
-        mileStone.setName(updatedMileStone.getMileStoneName());
+        mileStone.setName(updatedMileStone.getMilestoneName());
     }
 
     @Transactional

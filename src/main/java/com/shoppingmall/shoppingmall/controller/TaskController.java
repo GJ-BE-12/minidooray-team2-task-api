@@ -22,10 +22,10 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping("/{projectId}/tasks")
-    public ResponseEntity<TaskResponse> create(@PathVariable("projectId") Long projectId,
+    public ResponseEntity<Long> create(@PathVariable("projectId") Long projectId,
                                                @Valid @RequestBody CreateTaskRequest createTaskRequest){
         Task task = taskService.create(projectId, createTaskRequest);
-        return ResponseEntity.ok().body(TaskResponse.from(task));
+        return ResponseEntity.ok().body(task.getId());
     }
 
     @GetMapping("/{projectId}/tasks")

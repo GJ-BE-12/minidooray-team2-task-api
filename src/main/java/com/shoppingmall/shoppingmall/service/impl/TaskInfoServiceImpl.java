@@ -39,11 +39,7 @@ public class TaskInfoServiceImpl implements TaskInfoService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<Long> getTaskComments(Long projectId, Long taskId) {
-        List<Comment> comments = commentRepository.findAllByTaskId(taskId);
-        return comments
-                .stream()
-                .map(Comment::getId)
-                .toList();
+    public List<Comment> getTaskComments(Long projectId, Long taskId) {
+        return commentRepository.findAllByTaskId(taskId);
     }
 }

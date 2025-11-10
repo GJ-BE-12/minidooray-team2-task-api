@@ -121,4 +121,15 @@ public class ProjectServiceImpl implements ProjectService {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public List<Long> getMemberIdByProjectId(long projectId) {
+        List<ProjectMember> projectMembers = projectMemberRepository.findAllByProjectId(projectId);
+        List<Long> memberId = new ArrayList<>();
+        for(ProjectMember projectMember : projectMembers){
+            Long id = projectMember.getMemberId();
+            memberId.add(id);
+        }
+        return memberId;
+    }
 }

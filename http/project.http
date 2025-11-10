@@ -14,9 +14,8 @@ GET localhost:8082/projects/by-member/1
 memberID: 1
 
 ### 프로젝트에 멤버 추가
-POST localhost:8082/projects/1/members
+POST localhost:8082/projects/3/members
 Content-Type: application/json
-memberID: 1
+memberID: 3
 
-5
-
+1

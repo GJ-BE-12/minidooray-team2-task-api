@@ -12,10 +12,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateProjectRequest {
+    private long id;
     @NotBlank(message = "프로젝트명은 필수입니다.")
     @Size(max = 50, message = "프로젝트명은 50자 이내로 작성해야 합니다.")
     private String projectName;
 
     private List<String> tagList;
-    private List<String> mileStoneList;
+    private List<String> milestoneList;
 }

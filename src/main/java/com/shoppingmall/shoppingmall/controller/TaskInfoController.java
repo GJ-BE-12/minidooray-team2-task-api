@@ -1,6 +1,9 @@
 package com.shoppingmall.shoppingmall.controller;
 
 import com.shoppingmall.shoppingmall.dto.TaskTagResponse;
+import com.shoppingmall.shoppingmall.dto.comment.CommentRequest;
+import com.shoppingmall.shoppingmall.dto.mileStone.GetMileStoneResponse;
+import com.shoppingmall.shoppingmall.entity.Comment;
 import com.shoppingmall.shoppingmall.entity.MileStone;
 import com.shoppingmall.shoppingmall.service.TaskInfoService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -31,17 +35,22 @@ public class TaskInfoController {
     }
 
     @GetMapping("/milestones")
-    public ResponseEntity<String> getTaskMileStone(@PathVariable("projectId") Long projectId,
-                                                      @PathVariable("taskId") Long taskId){
+    public ResponseEntity<GetMileStoneResponse> getTaskMileStone(@PathVariable("projectId") Long projectId,
+                                                                 @PathVariable("taskId") Long taskId){
         MileStone mileStone = taskInfoService.getTaskMileStone(projectId, taskId);
-        return ResponseEntity.ok().body(mileStone.getName());
+        return ResponseEntity.ok().body(GetMileStoneResponse.from(mileStone));
     }
 
     @GetMapping("/comments")
-    public ResponseEntity<List<Long>> getComments(@PathVariable("projectId") Long projectId,
+    public ResponseEntity<List<CommentRequest>> getComments(@PathVariable("projectId") Long projectId,
                                                   @PathVariable("taskId") Long taskId){
-        List<Long> comments = taskInfoService.getTaskComments(projectId, taskId);
-        return ResponseEntity.ok().body(comments);
+        List<Comment> comments = taskInfoService.getTaskComments(projectId, taskId);
+        List<CommentRequest> dtoList = new ArrayList<>();
+        for(Comment comment : comments){
+            CommentRequest commentRequest = new CommentRequest(comment.getId(), comment.getContent());
+            dtoList.add(commentRequest);
+        }
+        return ResponseEntity.ok().body(dtoList);
     }
 }
 

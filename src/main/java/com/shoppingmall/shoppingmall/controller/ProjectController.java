@@ -9,6 +9,7 @@ import com.shoppingmall.shoppingmall.entity.ProjectMember;
 import com.shoppingmall.shoppingmall.service.ProjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,10 +24,10 @@ public class ProjectController{
 
     // 프로젝트 이름과 멤버아이디(header로 들어옴, adminId에 memberId 삽입) 상태는 디폴트 값으로 ACTIVATE 부여
     @PostMapping
-    public ResponseEntity<CreateProjectResponse> create(@RequestHeader("memberId") Long memberId,
-                                                        @Valid @RequestBody CreateProjectRequest createProjectRequest) {
-        Project project = projectService.create(createProjectRequest.getProjectName(), memberId, createProjectRequest.getTagList(), createProjectRequest.getMileStoneList());
-        return ResponseEntity.ok().body(CreateProjectResponse.from(project));
+    public ResponseEntity<Long> create(@RequestHeader("memberId") Long memberId,
+                                       @Valid @RequestBody CreateProjectRequest createProjectRequest) {
+        Project project = projectService.create(createProjectRequest.getProjectName(), memberId, createProjectRequest.getTagList(), createProjectRequest.getMilestoneList());
+        return ResponseEntity.ok().body(project.getId());
     }
 
     // memberId에 해당하는 member가 가지고 있는 Project List를 보여줌
@@ -41,10 +42,15 @@ public class ProjectController{
 
     // uri로 들어온 ProjectId에 해당하는 프로젝트에 memberId를 저장함
     @PostMapping("/{projectId}/members")
-    public ResponseEntity<ProjectMember> createProjectMember(@PathVariable("projectId") Long projectId,
+    public ResponseEntity<Void> createProjectMember(@PathVariable("projectId") Long projectId,
                                                              @RequestBody Long memberId){
         projectService.addMemberToProject(projectId, memberId);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{projectId}/members")
+    public ResponseEntity<List<Long>> findProjectMember(@PathVariable("projectId")Long projectId){
+        return ResponseEntity.ok().body(projectService.getMemberIdByProjectId(projectId));
     }
 }
